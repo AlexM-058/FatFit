@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Bar from './CalorieBar';
 import './CalorieCounter.css';
 import Breakfest from './breakfest';
-import Lunch from './Lunch';
+import Lunch from './lunch';
 import Dinner from './Dinner';
 import Snacks from './Snacks';
 
