@@ -20,6 +20,7 @@ const FitFatPage = () => {
   const [modalError, setModalError] = useState("");
   const [modalLoading, setModalLoading] = useState(false);
   const [showForYouRecipes, setShowForYouRecipes] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   
   useEffect(() => {
     const controller = new AbortController();
@@ -191,7 +192,14 @@ const FitFatPage = () => {
     }
   };
 
- 
+  // Închide nav la schimbarea rutei sau resize peste 640px
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 640) setNavOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (loading) {
     return <div className="fatfit-container">Loading user data...</div>;
@@ -213,6 +221,13 @@ const FitFatPage = () => {
     <div className="fatfit-container">
       <div className="head">
         <img className="logo" src="/assets/LOGOwitoutBackgorund.png" alt="logo" />
+        <button
+          className="hamburger-btn"
+          aria-label="Open navigation"
+          onClick={() => setNavOpen((v) => !v)}
+        >
+          &#9776;
+        </button>
         <div className="header_right">
           {/* Username button opens modal */}
           <button className="user" onClick={handleOpenUserModal}>
@@ -274,12 +289,28 @@ const FitFatPage = () => {
           </div>
         </div>
       )}
-      <div className="navigation">
-        <button className="button" onClick={() => goToRoute('/workout')}>Workout</button>
-        <button className="button" onClick={() => goToRoute('/meals')}>Food</button>
-        <button className="button" onClick={() => goToRoute('/recipes')}>Recipes</button>
-        <button className="button" onClick={() => goToRoute('/for-you')}>Your Recipes</button>
-        <button className="button" onClick={returnCalorieCounter}>Home</button>
+      <div
+        className={`navigation${navOpen ? " open" : ""}`}
+        onClick={() => navOpen && setNavOpen(false)}
+        style={navOpen ? { pointerEvents: "auto" } : {}}
+      >
+        {/* Poți adăuga un buton de închidere în nav pe mobil */}
+        <button
+          className="hamburger-btn"
+          aria-label="Close navigation"
+          style={{ marginBottom: 16, marginLeft: 8 }}
+          onClick={e => {
+            e.stopPropagation();
+            setNavOpen(false);
+          }}
+        >
+          &times;
+        </button>
+        <button className="button" onClick={() => { goToRoute('/workout'); setNavOpen(false); }}>Workout</button>
+        <button className="button" onClick={() => { goToRoute('/meals'); setNavOpen(false); }}>Food</button>
+        <button className="button" onClick={() => { goToRoute('/recipes'); setNavOpen(false); }}>Recipes</button>
+        <button className="button" onClick={() => { goToRoute('/for-you'); setNavOpen(false); }}>Your Recipes</button>
+        <button className="button" onClick={() => { returnCalorieCounter(); setNavOpen(false); }}>Home</button>
       </div>
       <div className="main_fatfit">
         {showForYouRecipes ? (
