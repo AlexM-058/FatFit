@@ -1,0 +1,80 @@
+import React, { useEffect, useState } from "react";
+import RecipesBlock from "../recursive/blocks/RecipesBlock.jsx";
+import "./RecipesMain.css";
+const API_URL = import.meta.env.VITE_API_URL;
+
+// Refacem selecțiile la toate tipurile găsite în date, nu doar cele principale
+const getAllTypes = (recipes) => {
+  const typesSet = new Set();
+  recipes.forEach((recipe) => {
+    if (Array.isArray(recipe.recipe_types?.recipe_type)) {
+      recipe.recipe_types.recipe_type.forEach((type) => {
+        typesSet.add(type);
+      });
+    }
+  });
+  return Array.from(typesSet);
+};
+
+const RecipesMain = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedType, setSelectedType] = useState("");
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`${API_URL}/api/recipes/search`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+        const data = await response.json();
+        setRecipes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError(err.message);
+        setRecipes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecipes();
+  }, []);
+
+  if (loading) return <div>Loading recipes...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  const allTypes = getAllTypes(recipes);
+
+  return (
+    <div className="recipes-main-container">
+      <h2 className="recipes-main-title">Recipes</h2>
+      <div className="recipes-type-filters">
+        <button
+          className={selectedType === "" ? "selected" : ""}
+          onClick={() => setSelectedType("")}
+        >
+          All
+        </button>
+        {allTypes.map((type) => (
+          <button
+            key={type}
+            className={selectedType === type ? "selected" : ""}
+            onClick={() => setSelectedType(type)}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+      
+      <RecipesBlock
+        recipes={recipes}
+        selectedType={selectedType === "" ? null : selectedType}
+      />
+    </div>
+  );
+};
+
+export default RecipesMain;

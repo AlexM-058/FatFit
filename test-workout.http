@@ -1,0 +1,4 @@
+POST http://localhost:3001/api/fitness-tribe/workout/<USERNAME>
+Content-Type: application/json
+
+{}

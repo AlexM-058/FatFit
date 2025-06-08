@@ -1,0 +1,17 @@
+.meal-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.meal-section {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px #0001;
+}
+.meal-section  {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}

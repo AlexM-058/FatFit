@@ -1,0 +1,87 @@
+
+
+/* CSS */
+.your-res-add-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.your-res-popup-overlay {
+  position: fixed;
+  z-index: 9998;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(6px);
+}
+
+.your-res-popup {
+  position: absolute;
+  z-index: 9999;
+  background: aliceblue;
+  border-radius: 12px;
+  padding: 24px 32px 32px 32px;
+  min-width: 320px;
+  min-height: 180px;
+  box-shadow: 0 4px 24px #0002;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.your-res-popup-btn-row {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.your-res-popup-back-btn {
+  margin-left: 12px;
+}
+
+.your-res-status {
+  margin-top: 10px;
+}
+
+.your-res-block {
+  /* Example styling for the recipe block */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 18px 20px 20px 20px;
+  margin-bottom: 16px;
+  min-width: 260px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.your-res-block strong {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.your-res-block ul {
+  margin: 0 0 0 18px;
+  padding: 0;
+}
+
+.add-meal-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-meal-btn:hover {
+  background: #388e3c;
+}

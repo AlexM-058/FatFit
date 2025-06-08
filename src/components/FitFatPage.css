@@ -1,0 +1,123 @@
+.fatfit-container {
+  min-height: 100vh;          
+  
+  position: relative;
+  width: 100%;
+  height: 102%;
+  display: grid ;
+   grid-template-columns: 256px auto;
+   grid-template-rows: 100px auto ;
+    grid-template-areas:
+    "head head"
+    "navigation main_fatfit";
+background-color: white;
+z-index: auto;
+
+}
+.head {
+  grid-area: head;
+ height: 100%;
+
+}
+
+.navigation {
+  grid-area: navigation;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  align-items: center;
+  border-right: 1px solid rgba(202, 153, 221, 0.595);
+ justify-content: center;
+ box-shadow: 1px 20px 20px 1px rgba(202, 153, 221, 0.595);
+}
+
+.main_fatfit {
+  grid-area: main_fatfit;
+  overflow: scroll;
+  
+}
+
+
+.head{
+  display: flex;
+flex-direction: row;
+
+align-items: center;
+justify-content: space-between;
+box-shadow: 1px 10px 20px 1px rgba(202, 153, 221, 0.293);;
+
+border-bottom:.5px solid rgba(202, 153, 221, 0.595) ;
+width: 100%;
+}
+.header_right{
+  margin-right: 20px;
+}
+.logo{
+  height: 100px;
+}
+.button{
+  padding: 10px 20px;
+  background:rgb(202, 153, 221);
+  border:1px solid white ;
+  color: white;
+  border-radius: 16px;
+  cursor: pointer;
+  width: 120px ;
+  transition: all 0.5s ease-in-out;
+
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 24px 20px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 32px #0003;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modal input[type="text"] {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.modal button {
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 1px solid #007bff;
+  background: #e6f0ff;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.modal button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal button:not(:last-child) {
+  margin-right: 8px;
+}
+
+.modal button[style*="color: red"] {
+  border: 1px solid #e00;
+  background: #fff0f0;
+  color: #e00;
+}
