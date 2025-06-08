@@ -4,16 +4,16 @@ import Bar from './CalorieBar';
 import './CalorieCounter.css';
 import Breakfest from './breakfest';
 import Lunch from './lunch';
-import Dinner from './Dinner';
-import Snacks from './Snacks';
+import Dinner from './dinner';
+import Snacks from './snaks';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function CalorieCounter({ username }) {
-  const [currentCalories, setCurrentCalories] = useState(0); // Starea pentru caloriile curente
-  const [maxCalories, setMaxCalories] = useState(null); // Starea pentru dailyCalorieTarget
-  const [loadingInitialData, setLoadingInitialData] = useState(true); // Pentru încărcarea inițială
-  const [errorInitialData, setErrorInitialData] = useState(null); // Pentru erori la încărcarea inițială
+  const [currentCalories, setCurrentCalories] = useState(0); 
+  const [maxCalories, setMaxCalories] = useState(null);
+  const [loadingInitialData, setLoadingInitialData] = useState(true); 
+  const [errorInitialData, setErrorInitialData] = useState(null);
 
   
   useEffect(() => {
