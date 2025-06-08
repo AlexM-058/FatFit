@@ -5,7 +5,7 @@ import './CalorieCounter.css';
 import Breakfest from './breakfest';
 import Lunch from './lunch';
 import Dinner from './dinner';
-import Snacks from './snaks';
+import Snacks from '../FatFit-Main/Snacks';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
