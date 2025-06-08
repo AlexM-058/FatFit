@@ -240,11 +240,18 @@ width: 100%;
   }
 
   .header_right {
-    margin-right: 0;
+    display: none;
+  }
+
+  .nav-mobile-user {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 16px;
+    align-items: flex-start;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .user, .logout {
@@ -277,9 +284,21 @@ width: 100%;
   }
 }
 
+@media (min-width: 651px) {
+  .nav-mobile-user {
+    display: none !important;
+  }
+}
+
 /* Ascunde hamburger-ul pe desktop */
 .hamburger-btn {
   display: none;
+}
+
+@media (max-width: 650px) {
+  .hamburger-btn {
+    display: block;
+  }
 }
 
 .meal-section {

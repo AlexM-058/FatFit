@@ -219,15 +219,26 @@ const FitFatPage = () => {
 
   return (
     <div className="fatfit-container">
-      <div className="head">
-        <img className="logo" src="/assets/LOGOwitoutBackgorund.png" alt="logo" />
+      <div className="head" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001, width: "100vw" }}>
+        {/* Burger bar button only on mobile */}
         <button
           className="hamburger-btn"
           aria-label="Open navigation"
           onClick={() => setNavOpen((v) => !v)}
         >
-          &#9776;
+          <img
+            src="/assets/burger-bar.png"
+            alt="menu"
+            style={{ width: 32, height: 32 }}
+          />
         </button>
+        <img
+          className="logo"
+          src="/assets/LOGOwitoutBackgorund.png"
+          alt="logo"
+          style={{ height: 120, maxWidth: 220, width: "auto" }}
+        />
+        {/* Show header_right only on desktop */}
         <div className="header_right">
           {/* Username button opens modal */}
           <button className="user" onClick={handleOpenUserModal}>
@@ -294,25 +305,25 @@ const FitFatPage = () => {
         onClick={() => navOpen && setNavOpen(false)}
         style={navOpen ? { pointerEvents: "auto" } : {}}
       >
-        {/* Poți adăuga un buton de închidere în nav pe mobil */}
-        <button
-          className="hamburger-btn"
-          aria-label="Close navigation"
-          style={{ marginBottom: 16, marginLeft: 8 }}
-          onClick={e => {
-            e.stopPropagation();
-            setNavOpen(false);
-          }}
-        >
-          &times;
-        </button>
+        {/* Show nav-mobile-user only on mobile */}
+        <div className="nav-mobile-user">
+          <button className="user" onClick={handleOpenUserModal}>
+            Hello, {userData.user.username || username}!
+          </button>
+          <button className="logout" onClick={() => {
+            localStorage.removeItem("username");
+            localStorage.removeItem("token");
+            navigate('/');
+          }}>Logout</button>
+        </div>
+        {/* Remove burger/close button from nav */}
         <button className="button" onClick={() => { goToRoute('/workout'); setNavOpen(false); }}>Workout</button>
         <button className="button" onClick={() => { goToRoute('/meals'); setNavOpen(false); }}>Food</button>
         <button className="button" onClick={() => { goToRoute('/recipes'); setNavOpen(false); }}>Recipes</button>
         <button className="button" onClick={() => { goToRoute('/for-you'); setNavOpen(false); }}>Your Recipes</button>
         <button className="button" onClick={() => { returnCalorieCounter(); setNavOpen(false); }}>Home</button>
       </div>
-      <div className="main_fatfit">
+      <div className="main_fatfit" style={{ marginTop: 100, height: "calc(100vh - 100px)", overflow: "auto" }}>
         {showForYouRecipes ? (
           <ForYouRecipes username={username} />
         ) : (
