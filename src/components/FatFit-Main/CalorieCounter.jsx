@@ -3,19 +3,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Bar from './CalorieBar';
 import './CalorieCounter.css';
 import Breakfest from './breakfest';
-import Lunch from './lunch';
-import Dinner from './dinner';
-import Snacks from '../FatFit-Main/Snacks';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import Lunch from './Lunch';
+import Dinner from './Dinner';
+import Snacks from './Snacks';
 
 function CalorieCounter({ username }) {
-  const [currentCalories, setCurrentCalories] = useState(0); 
-  const [maxCalories, setMaxCalories] = useState(null);
-  const [loadingInitialData, setLoadingInitialData] = useState(true); 
-  const [errorInitialData, setErrorInitialData] = useState(null);
+  const [currentCalories, setCurrentCalories] = useState(0); // Starea pentru caloriile curente
+  const [maxCalories, setMaxCalories] = useState(null); // Starea pentru dailyCalorieTarget
+  const [loadingInitialData, setLoadingInitialData] = useState(true); // Pentru încărcarea inițială
+  const [errorInitialData, setErrorInitialData] = useState(null); // Pentru erori la încărcarea inițială
 
-  
+  // --- Logică pentru încărcarea datelor utilizatorului (dailyCalorieTarget) ---
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -32,12 +30,13 @@ function CalorieCounter({ username }) {
           return;
         }
 
-        // Ia datele userului și caloriile din backend
-        const response = await fetch(`${API_URL}/fatfit/${username}`, { signal });
+        const response = await fetch(`http://localhost:3001/fatfit/${username}`, { signal });
+
         if (signal.aborted) {
           console.log("Fetch for user data was aborted (CalorieCounter).");
           return;
         }
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: response.statusText }));
           console.error("Backend error response for user data:", errorData.message || response.statusText);
@@ -45,15 +44,21 @@ function CalorieCounter({ username }) {
           return;
         }
         const data = await response.json();
-        setMaxCalories(data.dailyCalorieTarget);
+        setMaxCalories(data.dailyCalorieTarget); // Setează maxCalories
 
-        // Ia caloriile curente din backend (exemplu: /caloriecounter/:username/total)
-        const calRes = await fetch(`${API_URL}/caloriecounter/${username}/total`, { signal });
-        if (calRes.ok) {
-          const calData = await calRes.json();
-          setCurrentCalories(Number(calData.totalCalories) || 0);
-        } else {
+        // Acum, încarcă caloriile curente din localStorage după ce știm maxCalories
+        const savedCalories = localStorage.getItem('dailyCalories');
+        const lastResetDate = localStorage.getItem('lastResetDate');
+        const today = new Date().toDateString();
+
+        if (lastResetDate !== today) {
+          // Dacă este o zi nouă, resetează caloriile în localStorage
+          localStorage.setItem('dailyCalories', '0');
+          localStorage.setItem('lastResetDate', today);
           setCurrentCalories(0);
+        } else {
+          // Altfel, încarcă caloriile salvate
+          setCurrentCalories(savedCalories ? parseInt(savedCalories, 10) : 0);
         }
 
       } catch (err) {
@@ -75,17 +80,10 @@ function CalorieCounter({ username }) {
     };
   }, [username]); 
 
-   useEffect(() => {
-    // Salvează caloriile în backend ori de câte ori currentCalories se schimbă
-    if (typeof username === 'string' && username) {
-      fetch(`${API_URL}/caloriecounter/${username}/total`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ totalCalories: currentCalories })
-      }).catch((err) => {
-        console.error("Failed to save calories to backend:", err);
-      });
-    }
+  // --- Logică pentru resetarea zilnică (miezul nopții) și salvare în localStorage ---
+  useEffect(() => {
+    // Salvează caloriile în localStorage ori de câte ori currentCalories se schimbă
+    localStorage.setItem('dailyCalories', currentCalories.toString());
 
     // Setează un timeout pentru resetarea la miezul nopții
     const now = new Date();
@@ -97,18 +95,12 @@ function CalorieCounter({ username }) {
 
     const timeoutId = setTimeout(() => {
       setCurrentCalories(0);
-      // Poți trimite și la backend resetarea dacă vrei
-      if (typeof username === 'string' && username) {
-        fetch(`${API_URL}/caloriecounter/${username}/total`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ totalCalories: 0 })
-        }).catch(() => {});
-      }
+      localStorage.setItem('dailyCalories', '0');
+      localStorage.setItem('lastResetDate', new Date().toDateString());
     }, timeToReset);
 
     return () => clearTimeout(timeoutId); // Curăță timeout-ul la demontare
-  }, [currentCalories, username]);
+  }, [currentCalories]);
 
   // --- Funcție de callback pentru a actualiza caloriile (folosită de Bar și FoodBlock) ---
   const handleUpdateCalories = useCallback((newAmount) => {
