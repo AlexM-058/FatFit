@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-// import '../recursive/blocks/PopUpFood.css';
+const API_URL = import.meta.env.VITE_API_URL
 import '../blocks/PopUpFood.css'; // Ensure this file exists and contains the necessary styles
 const FoodBlock = ({ food, onAddCalories, onClose, username: propUsername }) => {
   // Extract username from props or from URL params
@@ -42,7 +42,7 @@ const FoodBlock = ({ food, onAddCalories, onClose, username: propUsername }) => 
     try {
       console.log("Sending to database:", payload);
 
-      const response = await fetch(`http://localhost:3001/api/calories/${username}`, {
+      const response = await fetch(`${API_URL}/api/calories/${username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

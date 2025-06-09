@@ -58,6 +58,13 @@ const CalorieBar = ({ maxCalories, username }) => {
           ...caloriesDinner,
           ...caloriesSnacks
         ];
+        console.log("🍽️ Calories sent to Bar/foods:", {
+          lunch: caloriesLunch,
+          breakfast: caloriesBreakfast,
+          dinner: caloriesDinner,
+          snacks: caloriesSnacks,
+          allCalories
+        });
         const sum = allCalories.reduce((acc, val) => acc + (Number(val) || 0), 0);
         setCurrentCalories(sum);
       } catch (err) {

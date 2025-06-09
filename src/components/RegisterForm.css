@@ -187,3 +187,34 @@
   place-items: center;
   margin-left:20px ;
 }
+@media (max-width: 650px) {
+  .register-form {
+    width: 90%;
+    padding: 15px;
+    max-width: 320px;
+  }
+
+  .form-input {
+    max-width: 100%;
+    width: 90%;
+  }
+
+  .form-button {
+    max-width: 80%;
+    margin-bottom: 10px;
+  }
+
+  .form-navigation {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-review {
+    width: 80%;
+  }
+  .eye-icon{
+    right: 30px;
+    top: 85px;
+  }
+ 
+}

@@ -326,7 +326,7 @@ const RegisterForm = ({ onBackClick }) => {
           </div>
         </div>
       )}
-      <div style={{ textAlign: "center", marginTop: 16 }}>
+      <div style={{ textAlign: "center"}}>
         <button
           className="form-button login-btn"
           onClick={handleLoginSubmit}
