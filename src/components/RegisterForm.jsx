@@ -15,7 +15,9 @@ const RegisterForm = ({ onBackClick }) => {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/quiz`)
+    fetch(`${API_URL}/quiz`, {
+      credentials: "include" // Ensure cookies are sent for httpOnly JWT
+    })
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch quiz');
         return res.json();
@@ -49,6 +51,7 @@ const RegisterForm = ({ onBackClick }) => {
           const checkRes = await fetch(`${API_URL}/check-user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
             body: JSON.stringify({ username, email }),
           });
 
@@ -138,7 +141,7 @@ const RegisterForm = ({ onBackClick }) => {
       const registerRes = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
         body: JSON.stringify({ fullname, username, email, password }),
       });
 
@@ -152,6 +155,7 @@ const RegisterForm = ({ onBackClick }) => {
       const quizRes = await fetch(`${API_URL}/answers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
         body: JSON.stringify({ username, answers: quizAnswers }),
       });
 

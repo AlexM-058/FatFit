@@ -31,10 +31,20 @@ function CalorieCounter({ username }) {
         }
 
         // Use API_URL from env, not hardcoded localhost
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/fatfit/${username}`, { signal });
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/fatfit/${username}`, {
+          signal,
+          credentials: "include" // Use cookies for auth
+        });
 
         if (signal.aborted) {
           console.log("Fetch for user data was aborted (CalorieCounter).");
+          return;
+        }
+
+        if (response.status === 401) {
+          console.warn("CalorieCounter: 401 Unauthorized. JWT cookie missing or invalid.");
+          setErrorInitialData("Session expired or unauthorized. Please log in again.");
+          setLoadingInitialData(false);
           return;
         }
 
@@ -45,7 +55,13 @@ function CalorieCounter({ username }) {
           return;
         }
         const data = await response.json();
-        setMaxCalories(data.dailyCalorieTarget); // Setează maxCalories
+        // If backend returns {data: 'Protected content'}, treat as unauthorized
+        if (data && data.data === 'Protected content') {
+          setErrorInitialData("Session expired or unauthorized. Please log in again.");
+          setLoadingInitialData(false);
+          return;
+        }
+        setMaxCalories(data.dailyCalorieTarget); // Set maxCalories
 
         // Acum, încarcă caloriile curente din localStorage după ce știm maxCalories
         const savedCalories = localStorage.getItem('dailyCalories');

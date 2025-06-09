@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './FitFatPage.css';
-import { Outlet, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useParams, useLocation, Link } from 'react-router-dom';
 import CalorieCounter from './FatFit-Main/CalorieCounter';
-import ForYouRecipes from '../components/recursive/ForYouRecipes';
+import ForYouRecipes from './recursive/ForYouRecipes'; 
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,7 +13,6 @@ const FitFatPage = () => {
 
   const [showCalorieCounter, setShowCalorieCounter] = useState(true);
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [newUsername, setNewUsername] = useState("");
@@ -21,24 +20,42 @@ const FitFatPage = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [showForYouRecipes, setShowForYouRecipes] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
+    // Get the logged-in username from localStorage
+    const loggedInUsername = localStorage.getItem("username");
+
+    // If someone tries to access /fatfit/:username with a different username, redirect to their own page
+    if (username && loggedInUsername && username !== loggedInUsername) {
+      navigate(`/fatfit/${loggedInUsername}`, { replace: true });
+      return;
+    }
+
     if (username) {
       const fetchUserData = async () => {
         try {
           setLoading(true);
-          setError(null);
           setUserData(null);
 
           let response;
           try {
-            response = await fetch(`${API_URL}/fatfit/${username}`, { signal });
+            // Log cookies before making the request
+            console.log("Current cookies before fetch:", document.cookie);
+
+            response = await fetch(`${API_URL}/fatfit/${username}`, {
+              signal,
+              credentials: "include" // Use cookies for auth
+            });
+
+            // Log response status for debugging
+            console.log("Fetch /fatfit/:username response status:", response.status);
+
           } catch (fetchErr) {
             if (fetchErr.name === "AbortError") {
-              // This is normal in React StrictMode/dev, just log and return
               console.log("Fetch aborted (not an error):", fetchErr.message);
               return;
             }
@@ -53,29 +70,36 @@ const FitFatPage = () => {
             return;
           }
 
-          if (!response.ok) {
-            const errorBody = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(errorBody.message || 'Failed to fetch user data');
+          if (response.status === 401) {
+            console.warn("401 Unauthorized: JWT cookie missing or invalid. Cookies:", document.cookie);
+            localStorage.removeItem("username");
+            setError("Session expired or unauthorized. Please log in again.");
+            setLoading(false);
+            navigate("/", { replace: true });
+            return;
           }
 
           const data = await response.json();
+          console.log("userData from backend:", data);
+          // If backend returns {data: 'Protected content'}, treat as unauthorized
+          if (data && data.data === 'Protected content') {
+            setError("Session expired or unauthorized. Please log in again.");
+            setLoading(false);
+            navigate("/", { replace: true });
+            return;
+          }
           setUserData(data);
           setLoading(false);
         } catch (err) {
           if (err.name === 'AbortError') {
-            // This is normal in React 18 dev mode (StrictMode double invoke)
             console.log('Fetch aborted (not an error):', err.message);
-          } else {
-            console.error("Error fetching user data in FitFatPage:", err);
-            setError(err.message || "Failed to fetch user data.");
+            return;
           }
+          setError(err.message || "Failed to fetch user data.");
           setLoading(false);
         }
       };
       fetchUserData();
-    } else {
-      setError("Username is missing from the URL. Please log in.");
-      setLoading(false);
     }
 
     return () => {
@@ -109,10 +133,15 @@ const FitFatPage = () => {
     if (route === '/for-you') {
       setShowForYouRecipes(true);
       setShowCalorieCounter(false);
+      navigate(`/fatfit/${username}/for-you`, { replace: false });
+    } else if (route === '/workout' || route === '/meals' || route === '/recipes') {
+      setShowForYouRecipes(false);
+      setShowCalorieCounter(false);
+      navigate(`/fatfit/${username}${route}`, { replace: false });
     } else {
       setShowForYouRecipes(false);
-      navigate(`/fatfit/${username}${route}`);
-      setShowCalorieCounter(false);
+      setShowCalorieCounter(true);
+      navigate(`/fatfit/${username}`, { replace: false });
     }
   };
 
@@ -123,7 +152,8 @@ const FitFatPage = () => {
   };
 
   const handleOpenUserModal = () => {
-    setNewUsername(userData.user.username);
+    // Protect against userData or userData.user being undefined
+    setNewUsername(userData?.user?.username || "");
     setModalError("");
     setShowUserModal(true);
   };
@@ -201,22 +231,6 @@ const FitFatPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (loading) {
-    return <div className="fatfit-container">Loading user data...</div>;
-  }
-
-  if (error) {
-    return <div className="fatfit-container">Error: {error}</div>;
-  }
-
-  if (!userData) {
-    return <div className="fatfit-container">No user data available.</div>;
-  }
-
-  const dailyTarget = userData.dailyCalorieTarget;
-  const userGoal = userData.goal; // Get 'goal' exactly as it is from backend
-  
-
   return (
     <div className="fatfit-container">
       <div className="head" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001, width: "100vw" }}>
@@ -242,7 +256,7 @@ const FitFatPage = () => {
         <div className="header_right">
           {/* Username button opens modal */}
           <button className="user" onClick={handleOpenUserModal}>
-            Hello, {userData.user.username || username}!
+            Hello, {(userData && userData.user && userData.user.username) || username}!
           </button>
           <button className="logout" onClick={() => {
             localStorage.removeItem("username");
@@ -308,7 +322,7 @@ const FitFatPage = () => {
         {/* Show nav-mobile-user only on mobile */}
         <div className="nav-mobile-user">
           <button className="user" onClick={handleOpenUserModal}>
-            Hello, {userData.user.username || username}!
+            Hello, {(userData && userData.user && userData.user.username) || username}!
           </button>
           <button className="logout" onClick={() => {
             localStorage.removeItem("username");
@@ -316,28 +330,30 @@ const FitFatPage = () => {
             navigate('/');
           }}>Logout</button>
         </div>
-        {/* Remove burger/close button from nav */}
+        {/* Use goToRoute for navigation to ensure state is updated correctly */}
         <button className="button" onClick={() => { goToRoute('/workout'); setNavOpen(false); }}>Workout</button>
         <button className="button" onClick={() => { goToRoute('/meals'); setNavOpen(false); }}>Food</button>
         <button className="button" onClick={() => { goToRoute('/recipes'); setNavOpen(false); }}>Recipes</button>
         <button className="button" onClick={() => { goToRoute('/for-you'); setNavOpen(false); }}>Your Recipes</button>
         <button className="button" onClick={() => { returnCalorieCounter(); setNavOpen(false); }}>Home</button>
       </div>
-      <div className="main_fatfit" style={{ marginTop: 100, height: "calc(100vh - 100px)", overflow: "auto" }}>
-        {showForYouRecipes ? (
+      <div className="main_fatfit" style={{ height: "calc(100vh - 100px)", overflow: "auto" }}>
+        {loading ? (
+          <div style={{ padding: 24 }}>Loading user data...</div>
+        ) : error ? (
+          <div style={{ color: "red", padding: 24 }}>Error: {error}</div>
+        ) : !userData || !userData.user ? (
+          <div style={{ padding: 24 }}>No user data available.</div>
+        ) : showForYouRecipes ? (
           <ForYouRecipes username={username} />
+        ) : showCalorieCounter ? (
+          <CalorieCounter
+            username={username}
+            initialCalories={userData?.dailyCalorieTarget}
+            userGoal={userData?.goal}
+          />
         ) : (
-          <>
-            {showCalorieCounter && (
-              <CalorieCounter
-                username={username}
-                initialCalories={dailyTarget}
-                userGoal={userGoal}
-              />
-            )}
-            {/* Pass username to MealsPage via Outlet context */}
-            <Outlet context={{ username }} />
-          </>
+          <Outlet context={{ username }} />
         )}
       </div>
     </div>

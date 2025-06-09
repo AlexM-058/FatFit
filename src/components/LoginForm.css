@@ -84,28 +84,36 @@
   place-items: center;
 }
 
+.eye-icon {
+  color: #a399e7;
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 @media (max-width: 650px) {
   .login-form {
     width: 90%;
     padding: 20px;
     max-width: 310px;
   }
-  
   .login-form input {
     width: 100%;
   }
-  
   .login-actions {
     flex-direction: column;
     row-gap: 10px;
   }
-  
   .login-actions button {
     width: 100%;
   }
-  .submit{
+  .submit {
     width: 100%;
-   
   }
-  
+  .eye-icon {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }

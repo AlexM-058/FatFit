@@ -8,7 +8,6 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -16,16 +15,15 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly/JWT
         body: JSON.stringify({ username, password })
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Backend nu mai trimite user, deci folosește direct username-ul introdus
+        // Do NOT save token to localStorage for cookie-based auth
         onSubmit(username);
-        // Optionally: show a success message or redirect
       } else {
         setError(data.message || "Login failed. Please check your credentials.");
       }
@@ -54,7 +52,6 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
         <div
           type="button"

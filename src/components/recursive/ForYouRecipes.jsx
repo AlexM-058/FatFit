@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import YourResBlock from "./blocks/YourResBlock.jsx";
-const API_URL = import.meta.env.VITE_API_URL;
 
 const ForYouRecipes = ({ username }) => {
   const [breakfastRecipes, setBreakfastRecipes] = useState([]);
@@ -12,21 +11,18 @@ const ForYouRecipes = ({ username }) => {
 
   // Load and split recipes from localStorage or fetch from backend
   useEffect(() => {
-    if (!username) return;
-    const localKey = `ai_recipes_${username}`;
-    // --- Remove cache at 00:01 ---
-    const now = new Date();
-    const nextMidnight = new Date(now);
-    nextMidnight.setHours(0, 1, 0, 0); // 00:01
-    if (now > nextMidnight) {
-      // If it's after 00:01 today, set for tomorrow
-      nextMidnight.setDate(nextMidnight.getDate() + 1);
+    if (!username) {
+      setBreakfastRecipes([]);
+      setLunchRecipes([]);
+      setDinnerRecipes([]);
+      setError("No username provided.");
+      setLoading(false);
+      return;
     }
-    const msToClear = nextMidnight.getTime() - now.getTime();
-    const clearTimeoutId = setTimeout(() => {
-      localStorage.removeItem(localKey);
-    }, msToClear);
-
+    setLoading(true);
+    setError(null);
+    const localKey = `ai_recipes_${username}`;
+    const cached = localStorage.getItem(localKey);
     const processData = (meal_plan) => {
       setBreakfastRecipes(
         Array.isArray(meal_plan.breakfast) ? meal_plan.breakfast : []
@@ -34,7 +30,6 @@ const ForYouRecipes = ({ username }) => {
       setLunchRecipes(Array.isArray(meal_plan.lunch) ? meal_plan.lunch : []);
       setDinnerRecipes(Array.isArray(meal_plan.dinner) ? meal_plan.dinner : []);
     };
-    const cached = localStorage.getItem(localKey);
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
@@ -49,9 +44,7 @@ const ForYouRecipes = ({ username }) => {
         // ignore parse error, fallback to fetch
       }
     }
-    setLoading(true);
-    setError(null);
-    fetch(`${API_URL}/api/fitness-tribe/recipes/${username}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/fitness-tribe/recipes/${username}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })
@@ -69,10 +62,6 @@ const ForYouRecipes = ({ username }) => {
       })
       .catch((err) => setError(err.message || "Unknown error"))
       .finally(() => setLoading(false));
-
-    return () => {
-      clearTimeout(clearTimeoutId);
-    };
   }, [username]);
 
   let recipesToShow = [];
@@ -164,40 +153,12 @@ const ForYouRecipes = ({ username }) => {
       </div>
       <h3 style={{ textAlign: "center" }}>{mealTitle}</h3>
       {/* Compartment pentru breakfast: listă cu nume și calorii */}
-      {selectedMeal === "breakfast" && (
-        <div
-          style={{
-            margin: "0 auto 24px auto",
-            maxWidth: 400,
-            background: "#f9f9f9",
-            borderRadius: 10,
-            padding: 16,
-            boxShadow: "0 2px 8px #0001",
-          }}
-        >
-          <h4 style={{ margin: "0 0 12px 0", textAlign: "center" }}>
-            Breakfast Items
-          </h4>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {breakfastRecipes.map((rec, idx) => (
-              <li
-                key={idx}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  borderBottom: "1px solid #eee",
-                  padding: "6px 0",
-                }}
-              >
-                <span>{rec.description || rec.name || `Recipe ${idx + 1}`}</span>
-                <span style={{ fontWeight: 500 }}>
-                  {rec.total_calories || rec.calories || 0} kcal
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      
+       
+         
+          
+        
+      
       <div
         style={{
           display: "flex",

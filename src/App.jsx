@@ -1,6 +1,6 @@
 // App.jsx (Corrected if LoginForm passes username and password)
 import React, { useState } from 'react'; // No need for useEffect in MainContent
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import MainButton from './components/MainButton';
 import AboutUs from './components/AboutUs';
@@ -21,12 +21,11 @@ function MainContent() {
   const handleBackClick = () => setView('main');
   const handleOpenLogin = () => setView('login');
 
-  // Corrected handleLoginSubmit: It should receive the username string
-  // If your LoginForm's onSubmit actually passes the full 'user' object,
-  // then change the parameter from 'username' to 'userData' and use 'userData.username'
-  const handleLoginSubmit = (loggedInUsername) => { // Expecting a string here
+  const handleLoginSubmit = (loggedInUsername) => {
     console.log(`Logged in as ${loggedInUsername}`);
-    navigate(`/fatfit/${loggedInUsername}`); // Use the string directly
+    localStorage.setItem("username", loggedInUsername);
+    setView('main'); // Reset view to main (optional, for safety)
+    navigate(`/fatfit/${loggedInUsername}`); // Go to FatFitPage after login
   };
 
   return (
@@ -39,7 +38,7 @@ function MainContent() {
           <LoginForm
             onSignUpClick={() => setView('register')}
             onResetPasswordClick={() => setView('forgotPassword')}
-            onSubmit={handleLoginSubmit} // This onSubmit needs to ensure it passes the username string
+            onSubmit={handleLoginSubmit}
           />
         )}
         {view === 'register' && <RegisterForm onBackClick={handleBackClick} />}
@@ -50,16 +49,53 @@ function MainContent() {
   );
 }
 
+// ProtectedRoute component
+function ProtectedRoute({ children }) {
+  const isAuthenticated = !!localStorage.getItem("username");
+  const location = useLocation();
+
+  // Prevent infinite redirect loop
+  if (!isAuthenticated) {
+    if (location.pathname !== "/") {
+      return <Navigate to="/" state={{ from: location }} replace />;
+    }
+    // If already on "/", just render children (login page)
+    return children;
+  }
+
+  // If authenticated and on "/", redirect to user's FatFitPage
+  if (location.pathname === "/") {
+    const username = localStorage.getItem("username");
+    return <Navigate to={`/fatfit/${username}`} replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainContent />} />
-        {/* Make sure the FatFitPage route has the :username parameter and /* for nested routes */}
-        <Route path="/fatfit/:username/*" element={<FatFitPage />} > {/* Add /* for nested routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <MainContent />
+            </ProtectedRoute>
+          }
+        />
+        {/* Protect FatFitPage and its nested routes */}
+        <Route
+          path="/fatfit/:username/*"
+          element={
+            <ProtectedRoute>
+              <FatFitPage />
+            </ProtectedRoute>
+          }
+        >
           <Route path="workout" element={<WorkoutMain />} />
           <Route path="meals" element={<MealsMain />} />
-          <Route path="recipes" element={<RecipesMain />} /> {/* Render RecipesMain component */}
+          <Route path="recipes" element={<RecipesMain />} />
         </Route>
       </Routes>
     </Router>
