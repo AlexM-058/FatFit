@@ -1,8 +1,10 @@
 .calorie-bar-container {
-    width: 300px;
-    margin: 20px auto;
+    width: 420px;
+    margin: 24px auto 12px auto;
     font-family: sans-serif;
-    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .calorie-input {
@@ -15,27 +17,79 @@
     z-index: 9999;
   }
   
-  .progress-bar {
-    width: 100%;
-    height: 20px;
-    background-color: #eb0e0e;
-    border-radius: 10px;
-    z-index: 9999;
-    overflow: hidden;
-
+  .calorie-bar-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
   
-  .progress-fill {
-    height: 100%;
-    background-color: #af4cac;
-    transition: width 0.3s ease;
+  .progress-bar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%; /* Forma de farfurie rotundă */
+    background: radial-gradient(circle at 60% 40%, #fff 60%, #e0e0e0 100%); /* Culoarea farfuriei */
+    border: 8px solid #d1cfcf;
+    box-shadow: 0 2px 12px #0002, 0 0 0 8px #f8f8f8 inset;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+  }
+  
+  .progress-bar.over-limit {
+    box-shadow: 0 0 0 4px #e74c3c inset, 0 2px 12px #0002;
+  }
+  
+  .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 90px 0 0 90px / 90px 0 0 90px;
+    background: linear-gradient(to right, #FFD700, #FFA500 80%, #fff0 100%);
+    transition: width 0.7s cubic-bezier(.4,1.4,.6,1); /* Animație la umplere */
+    z-index: 2;
+  }
+  
+  .progress-fill.over-limit {
+    background: linear-gradient(to right, rgb(163, 60, 231), #e74c3c 100%);
+  }
+  
+  .plate-food-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    pointer-events: none;
+    object-fit: contain;
+  }
+  
+  .calorie-controls {
+    margin-left: 24px;
+  }
+  
+  .calorie-controls p {
+    margin: 0;
+  }
+  
+  .calorie-controls p.over-limit {
+    color: #e74c3c;
     font-weight: bold;
   }
   
-  .calorie-bar-filler{
-    background-color: #af4cac;
+  .calorie-bar-percent {
+    text-align: center;
+    margin-top: 8px;
+    font-weight: bold;
+  }
+
+  /* Hide old bar style */
+  .calorie-bar-filler {
+    display: none !important;
   }

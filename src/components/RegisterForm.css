@@ -10,6 +10,8 @@
   max-width: 500px;
   margin: auto;
   height: max-content;
+  min-width: none;
+  position: relative;
 }
 
 .step-container {
@@ -70,10 +72,35 @@
   
 }
 
+.form-button.next-btn {
+  /* Opacity and pointer-events handled by :disabled */
+  transition: opacity 0.2s;
+}
+.form-button.next-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.form-button.submit-btn {
+  background: #a399e7;
+  color: #fff;
+  border: none;
+}
+
+.form-button.login-btn {
+  background: #a399e7;
+  color: #fff;
+  border: none;
+  margin-top: 16px;
+  text-align: center;
+}
+
 .form-navigation {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   width: 100%;
+  align-items: center;
 }
 
 .form-review {
@@ -94,7 +121,7 @@
 
 .cancel-button {
   font-size: 1rem;
-  margin-top: 15px;
+  
   background: none;
   border: none;
   background: #ccc;
@@ -141,4 +168,22 @@
   align-items: center;
   row-gap: 20px;
   width: 100%;
+}
+.eye-icon{
+ 
+
+
+  color: #a399e7;
+  position: absolute;
+  right: 120px;
+  top: 96px;
+    transform: translateY(-50%);
+
+
+}
+.password-container{
+  width: 90%;
+  display: grid;
+  place-items: center;
+  margin-left:20px ;
 }

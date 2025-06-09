@@ -12,7 +12,7 @@ body {
       rgba(0, 0, 0, 0.747),
       hsla(290, 78%, 39%, 0.502)
     ),
-    url('/assets/photo-1599058917212-d750089bc07e.avif'); /* Correct path to the image */
+    url('/assets/photo-1599058917212-d750089bc07e.avif');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -31,4 +31,20 @@ main {
   display: grid;
   place-items: center;
   height: 80%;
+}
+
+@media (max-width: 650px) {
+  body {
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.747),
+        hsla(290, 78%, 39%, 0.502)
+      ),
+      url('/assets/mobilebackgound.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  
 }

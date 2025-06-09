@@ -81,17 +81,28 @@ const CalorieBar = ({ maxCalories, username }) => {
   const isOverLimit = safeCurrent > safeMax;
 
   return (
-    <div className="calorie-bar-container">
-      <div
-        className={`calorie-bar-filler ${isOverLimit ? 'over-limit' : ''}`}
-        style={{ width: `${displayProgressBarPercentage}%` }}
-      >
-        <span className="calorie-bar-text">
-          {displayPercent}
-        </span>
+    <div className="calorie-bar-container calorie-bar-row">
+      <div className={`progress-bar${isOverLimit ? " over-limit" : ""}`}>
+        <div
+          className={`progress-fill${isOverLimit ? " over-limit" : ""}`}
+          style={{
+            width: `${displayProgressBarPercentage}%`
+          }}
+        />
+        {/* Healthy food image centered on the plate */}
+        <img
+          src="/assets/healthy-food.png"
+          className="plate-food-img"
+          alt="Healthy food"
+        />
       </div>
       <div className="calorie-controls">
-        <p>Current calories: {safeCurrent} / {safeMax}</p>
+        <p className={isOverLimit ? "over-limit" : ""}>
+          Current calories: {safeCurrent} / {safeMax}
+        </p>
+        <div className="calorie-bar-percent">
+          {displayPercent}
+        </div>
       </div>
     </div>
   );

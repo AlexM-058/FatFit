@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CalorieBar from "../FatFit-Main/CalorieBar";
 import RecipeItem from "./RecipeItem";
 import "./RecipesPage.css";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Add a simple FoodItem component for food search results
@@ -43,7 +44,7 @@ const FoodItem = ({ food, onAddCalories }) => {
     </div>
   );
 };
-
+  
 const RecipesPage = ({ maxCalories = 2000 }) => {
   const [currentCalories, setCurrentCalories] = useState(() => {
     // Load from localStorage if available and ensure it's a valid number

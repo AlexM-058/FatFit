@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './RegisterForm.css';
+import LoginForm from "./LoginForm";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const RegisterForm = ({ onBackClick }) => {
@@ -8,6 +9,10 @@ const RegisterForm = ({ onBackClick }) => {
   const [formData, setFormData] = useState({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLoginSubmit = () => {
+    if (onBackClick) onBackClick(); // Close RegisterForm completely
+  };
 
   useEffect(() => {
     fetch(`${API_URL}/quiz`)
@@ -64,7 +69,25 @@ const RegisterForm = ({ onBackClick }) => {
         alert('Completează toate câmpurile');
       }
     } else if (step === 2) {
+      // Do not allow to proceed without answering the question
+      const currentQ = quizData[currentQuestionIndex];
+      const answer = formData[currentQ?.question];
+      const isAnswered =
+        currentQ?.type === 'checkbox'
+          ? Array.isArray(answer) && answer.length > 0
+          : !!answer;
+
+      if (!isAnswered) {
+        alert('Please answer the question before continuing.');
+        return;
+      }
+
       if (currentQuestionIndex < quizData.length - 1) {
+        // Reset text input for next question if type is text
+        const nextQ = quizData[currentQuestionIndex + 1];
+        if (nextQ && nextQ.type === 'text') {
+          setFormData(prev => ({ ...prev, [nextQ.question]: "" }));
+        }
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
         setStep(3);
@@ -72,22 +95,46 @@ const RegisterForm = ({ onBackClick }) => {
     }
   };
 
-  const handlePrev = () => {
-    if (step === 2 && currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
-    } else {
-      setStep(prev => prev - 1);
-    }
-  };
 
-  const handleChange = (question, value) => {
-    setFormData({ ...formData, [question]: value });
+  // Modify handleChange for checkbox to save array of answers
+  const handleChange = (question, value, type) => {
+    if (type === 'checkbox') {
+      setFormData(prev => {
+        const prevArr = Array.isArray(prev[question]) ? prev[question] : [];
+        if (prevArr.includes(value)) {
+          // Deselect
+          return { ...prev, [question]: prevArr.filter(v => v !== value) };
+        } else {
+          // Select
+          return { ...prev, [question]: [...prevArr, value] };
+        }
+      });
+    } else {
+      setFormData({ ...formData, [question]: value });
+    }
   };
 
   const handleSubmit = async () => {
     const { fullname, username, email, password, ...quizAnswers } = formData;
 
     try {
+      // Check again that all required fields are present before submitting
+      if (!fullname || !username || !email || !password) {
+        alert("Please complete all fields before submitting.");
+        return;
+      }
+      // Optionally, check that all quiz questions are answered
+      const allQuizAnswered = quizData.every(q => {
+        const answer = formData[q.question];
+        return q.type === "checkbox"
+          ? Array.isArray(answer) && answer.length > 0
+          : !!answer;
+      });
+      if (!allQuizAnswered) {
+        alert("Please answer all quiz questions before submitting.");
+        return;
+      }
+
       const registerRes = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,12 +176,44 @@ const RegisterForm = ({ onBackClick }) => {
             <input type="text" placeholder="Full Name" className="form-input" onChange={e => handleChange('fullname', e.target.value)} />
             <input type="text" placeholder="Username" className="form-input" onChange={e => handleChange('username', e.target.value)} />
             <input type="email" placeholder="Email" className="form-input" onChange={e => handleChange('email', e.target.value)} />
-            <div className="password-container">
-              <input type={showPassword ? 'text' : 'password'} placeholder="Password" className="form-input" onChange={e => handleChange('password', e.target.value)} />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+           
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                className="form-input"
+                onChange={e => handleChange('password', e.target.value)}
+                style={{  }}
+              />
+              <div
+                type="button"
+                style={{
+                  position: 'absolute',
+                  right: '0px',
+                  top: '40%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setShowPassword(!showPassword)}
+                className="toggle-password"
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <img
+                    src="/assets/icons8-eye-50.png"
+                    className="eye-icon"
+                    style={{ width: '24px', height: '24px' }}
+                    alt="hide password"
+                  />
+                ) : (
+                  <img
+                    src="/assets/icons8-closed-eye-50.png"
+                    className="eye-icon"
+                    style={{ width: '24px', height: '24px' }}
+                    alt="show password"
+                  />
+                )}
+              </div>
+       
           </div>
           <button className="form-button" onClick={handleNext}>Next</button>
         </div>
@@ -147,19 +226,59 @@ const RegisterForm = ({ onBackClick }) => {
               <>
                 <p>{quizData[currentQuestionIndex].question}</p>
                 {quizData[currentQuestionIndex].type === 'text' && (
-                  <input type="text" className="form-input Input_quiz" onChange={e => handleChange(quizData[currentQuestionIndex].question, e.target.value)} />
+                  <input
+                    type="text"
+                    className="form-input Input_quiz"
+                    value={formData[quizData[currentQuestionIndex].question] || ""}
+                    onChange={e =>
+                      handleChange(
+                        quizData[currentQuestionIndex].question,
+                        e.target.value,
+                        'text'
+                      )
+                    }
+                    // Reset value when question changes
+                    key={quizData[currentQuestionIndex].question + currentQuestionIndex}
+                  />
                 )}
                 {quizData[currentQuestionIndex].type === 'radio' &&
                   quizData[currentQuestionIndex].options.map((option, idx) => (
                     <label key={idx} className='radio-label'>
-                      <input type="radio" name={quizData[currentQuestionIndex].question} value={option} onChange={e => handleChange(quizData[currentQuestionIndex].question, e.target.value)} />
+                      <input
+                        type="radio"
+                        name={quizData[currentQuestionIndex].question}
+                        value={option}
+                        checked={formData[quizData[currentQuestionIndex].question] === option}
+                        onChange={e =>
+                          handleChange(
+                            quizData[currentQuestionIndex].question,
+                            e.target.value,
+                            'radio'
+                          )
+                        }
+                      />
                       {option}
                     </label>
                   ))}
                 {quizData[currentQuestionIndex].type === 'checkbox' &&
                   quizData[currentQuestionIndex].options.map((option, idx) => (
                     <label key={idx} className='checkbox-label'>
-                      <input type="checkbox" name={quizData[currentQuestionIndex].question} value={option} onChange={e => handleChange(quizData[currentQuestionIndex].question, e.target.value)} />
+                      <input
+                        type="checkbox"
+                        name={quizData[currentQuestionIndex].question}
+                        value={option}
+                        checked={
+                          Array.isArray(formData[quizData[currentQuestionIndex].question]) &&
+                          formData[quizData[currentQuestionIndex].question].includes(option)
+                        }
+                        onChange={() =>
+                          handleChange(
+                            quizData[currentQuestionIndex].question,
+                            option,
+                            'checkbox'
+                          )
+                        }
+                      />
                       {option}
                     </label>
                   ))}
@@ -169,10 +288,22 @@ const RegisterForm = ({ onBackClick }) => {
             )}
           </div>
           <div className="form-navigation">
-            <button className='form-button' onClick={handlePrev}>Back</button>
-            <button className='form-button' onClick={handleNext}>
+            <button
+              className='form-button next-btn'
+              onClick={handleNext}
+              disabled={(() => {
+                const currentQ = quizData[currentQuestionIndex];
+                const answer = formData[currentQ?.question];
+                const isAnswered =
+                  currentQ?.type === 'checkbox'
+                    ? Array.isArray(answer) && answer.length > 0
+                    : !!answer;
+                return !isAnswered;
+              })()}
+            >
               {currentQuestionIndex === quizData.length - 1 ? 'Next' : 'Next Question'}
             </button>
+            <button className="cancel-button" onClick={onBackClick}>Cancel</button>
           </div>
         </div>
       )}
@@ -185,12 +316,24 @@ const RegisterForm = ({ onBackClick }) => {
             ))}
           </div>
           <div className="form-navigation">
-            <button className='form-button' onClick={handlePrev}>Back</button>
-            <button className='form-button' onClick={handleSubmit}>Submit</button>
+            <button
+              className='form-button submit-btn'
+              onClick={() => { handleSubmit(); handleLoginSubmit(); }}
+            >
+              Submit
+            </button>
+            <button className="cancel-button" onClick={onBackClick}>Cancel</button>
           </div>
         </div>
       )}
-      <button className="cancel-button" onClick={onBackClick}>Cancel</button>
+      <div style={{ textAlign: "center", marginTop: 16 }}>
+        <button
+          className="form-button login-btn"
+          onClick={handleLoginSubmit}
+        >
+          Already have an account? Login
+        </button>
+      </div>
     </div>
   );
 };
