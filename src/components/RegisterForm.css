@@ -82,13 +82,13 @@
 }
 
 .form-button.submit-btn {
-  background: #a399e7;
+  background: rgb(202, 153, 221);
   color: #fff;
   border: none;
 }
 
 .form-button.login-btn {
-  background: #a399e7;
+  background: rgb(202, 153, 221);
   color: #fff;
   border: none;
   margin-top: 16px;
@@ -173,7 +173,7 @@
  
 
 
-  color: #a399e7;
+  color: rgb(202, 153, 221);
   position: absolute;
   right: 120px;
   top: 96px;

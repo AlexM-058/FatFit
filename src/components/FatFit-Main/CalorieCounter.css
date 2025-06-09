@@ -2,16 +2,114 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-top: 16px;
+}
+
+.meal-sections > h1 {
+  font-size: 1.5rem;
+  color: #7a4fa3;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  padding-left: 18px;
 }
 
 .meal-section {
-  background: #f9f9f9;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  background: #f8f6fb;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #c299dd22;
+  padding: 24px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e5d8f3;
+  transition: box-shadow 0.2s;
 }
-.meal-section  {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
+
+.meal-section:hover {
+  box-shadow: 0 6px 24px #c299dd44;
+}
+
+.meal-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  justify-items: center;
+  align-items: stretch;
+  margin-top: 16px;
+}
+
+.meal-section-responsive {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  justify-items: center;
+  align-items: stretch;
+  margin-top: 16px;
+}
+@media (max-width: 900px) {
+  .meal-section-responsive {
+    grid-template-columns: 1fr;
+  }
+  .meal-section {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 4vw;
+  }
+}
+.pretty-header {
+  position: relative;
+  background: #f8f6fb;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #c299dd22;
+  padding: 22px 16px 22px 16px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  text-align: center;
+  border: 1px solid #e5d8f3;
+}
+.header-bg-deco {
+  display: none;
+}
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #7a4fa3;
+  margin-bottom: 6px;
+  z-index: 1;
+  position: relative;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.header-target {
+  font-size: 1rem;
+  color: #7a4fa3;
+  margin-bottom: 12px;
+  z-index: 1;
+  position: relative;
+}
+.header-bar-wrap {
+  z-index: 1;
+  position: relative;
+  margin: 0 auto;
+  max-width: 440px;
+}
+@media (max-width: 700px) {
+  .pretty-header {
+    padding: 12px 3vw 12px 3vw;
+  }
+  .header-title {
+    font-size: 1.1rem;
+  }
+  .header-bar-wrap {
+    max-width: 98vw;
+  }
 }

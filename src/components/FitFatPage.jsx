@@ -317,7 +317,6 @@ const FitFatPage = () => {
       <div
         className={`navigation${navOpen ? " open" : ""}`}
         onClick={() => navOpen && setNavOpen(false)}
-        style={navOpen ? { pointerEvents: "auto" } : {}}
       >
         {/* Show nav-mobile-user only on mobile */}
         <div className="nav-mobile-user">
@@ -330,14 +329,42 @@ const FitFatPage = () => {
             navigate('/');
           }}>Logout</button>
         </div>
-        {/* Use goToRoute for navigation to ensure state is updated correctly */}
-        <button className="button" onClick={() => { goToRoute('/workout'); setNavOpen(false); }}>Workout</button>
-        <button className="button" onClick={() => { goToRoute('/meals'); setNavOpen(false); }}>Food</button>
-        <button className="button" onClick={() => { goToRoute('/recipes'); setNavOpen(false); }}>Recipes</button>
-        <button className="button" onClick={() => { goToRoute('/for-you'); setNavOpen(false); }}>Your Recipes</button>
-        <button className="button" onClick={() => { returnCalorieCounter(); setNavOpen(false); }}>Home</button>
+      
+        {[
+          { label: "Workout", route: "/workout" },
+          { label: "Food", route: "/meals" },
+          { label: "Recipes", route: "/recipes" },
+          { label: "Your Recipes", route: "/for-you" },
+          { label: "Home", route: "" }
+        ].map(({ label, route }) => {
+          const isActive =
+            (route === ""
+              ? location.pathname === `/fatfit/${username}` || location.pathname === `/fatfit/${username}/`
+              : location.pathname === `/fatfit/${username}${route}`);
+          return (
+            <button
+              key={route || "home"}
+              className={`nav-btn${isActive ? " active" : ""}`}
+              onClick={() => {
+                if (route === "/for-you") goToRoute(route);
+                else if (route) goToRoute(route);
+                else returnCalorieCounter();
+                setNavOpen(false);
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
+        <div style={{ flex: 1 }} />
+        <button
+          className={`nav-btn${location.pathname === "/about-us" ? " active" : ""}`}
+          onClick={() => navigate("/about-us")}
+        >
+          About Us
+        </button>
       </div>
-      <div className="main_fatfit" style={{ height: "calc(100vh - 100px)", overflow: "auto" }}>
+      <div className="main_fatfit">
         {loading ? (
           <div style={{ padding: 24 }}>Loading user data...</div>
         ) : error ? (

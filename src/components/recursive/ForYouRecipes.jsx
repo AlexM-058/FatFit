@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import YourResBlock from "./blocks/YourResBlock.jsx";
+import "./ForYouRecipes.css";
 
 const ForYouRecipes = ({ username }) => {
   const [breakfastRecipes, setBreakfastRecipes] = useState([]);
@@ -91,84 +92,39 @@ const ForYouRecipes = ({ username }) => {
 
   return (
     <div className="recipes-main-container">
-      <h2 style={{ textAlign: "center" }}>For You - AI Recipes</h2>
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          justifyContent: "center",
-          marginBottom: 24,
-        }}
-      >
+      <h2 className="recipes-title">For You - AI Recipes</h2>
+      <div className="recipes-meal-tabs">
         <button
-          style={{
-            padding: "8px 18px",
-            borderRadius: 6,
-            border:
-              selectedMeal === "breakfast"
-                ? "2px solid #4caf50"
-                : "1px solid #888",
-            background:
-              selectedMeal === "breakfast" ? "#eaffea" : "#f5f5f5",
-            cursor: "pointer",
-            fontWeight:
-              selectedMeal === "breakfast" ? "bold" : "normal",
-          }}
+          className={`recipes-tab-btn${
+            selectedMeal === "breakfast" ? " active" : ""
+          }`}
           onClick={() => setSelectedMeal("breakfast")}
         >
           Breakfast
         </button>
         <button
-          style={{
-            padding: "8px 18px",
-            borderRadius: 6,
-            border:
-              selectedMeal === "lunch"
-                ? "2px solid #4caf50"
-                : "1px solid #888",
-            background: selectedMeal === "lunch" ? "#eaffea" : "#f5f5f5",
-            cursor: "pointer",
-            fontWeight: selectedMeal === "lunch" ? "bold" : "normal",
-          }}
+          className={`recipes-tab-btn${
+            selectedMeal === "lunch" ? " active" : ""
+          }`}
           onClick={() => setSelectedMeal("lunch")}
         >
           Lunch
         </button>
         <button
-          style={{
-            padding: "8px 18px",
-            borderRadius: 6,
-            border:
-              selectedMeal === "dinner"
-                ? "2px solid #4caf50"
-                : "1px solid #888",
-            background: selectedMeal === "dinner" ? "#eaffea" : "#f5f5f5",
-            cursor: "pointer",
-            fontWeight: selectedMeal === "dinner" ? "bold" : "normal",
-          }}
+          className={`recipes-tab-btn${
+            selectedMeal === "dinner" ? " active" : ""
+          }`}
           onClick={() => setSelectedMeal("dinner")}
         >
           Dinner
         </button>
       </div>
-      <h3 style={{ textAlign: "center" }}>{mealTitle}</h3>
-      {/* Compartment pentru breakfast: listă cu nume și calorii */}
-      
-       
-         
-          
-        
-      
-      <div
-        style={{
-          display: "flex",
-          gap: 32,
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
+      <h3 className="recipes-meal-title">{mealTitle}</h3>
+      <div className="recipes-list-scroll">
         {recipesToShow.length === 0 ? (
-          <div>No {mealTitle.toLowerCase()} recipes.</div>
+          <div className="recipes-empty">
+            No {mealTitle.toLowerCase()} recipes.
+          </div>
         ) : (
           recipesToShow.map((recipe, idx) => (
             <YourResBlock
@@ -177,7 +133,7 @@ const ForYouRecipes = ({ username }) => {
                 name: recipe.description || recipe.name || `Recipe ${idx + 1}`,
                 calories: recipe.total_calories || recipe.calories || 0,
                 ingredients: recipe.ingredients,
-                recipe: recipe.recipe
+                recipe: recipe.recipe,
               }}
               username={username}
               mealType={mealTitle.toLowerCase()}
