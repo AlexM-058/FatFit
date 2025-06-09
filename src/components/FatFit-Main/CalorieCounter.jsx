@@ -3,9 +3,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Bar from './CalorieBar';
 import './CalorieCounter.css';
 import Breakfest from './breakfest';
-import Lunch from './Lunch';
-import Dinner from './Dinner';
-import Snacks from './Snacks';
+import Lunch from './lunch';
+import Dinner from './dinner';
+import Snacks from './Ssnacks';
 
 function CalorieCounter({ username }) {
   const [currentCalories, setCurrentCalories] = useState(0); // Starea pentru caloriile curente
