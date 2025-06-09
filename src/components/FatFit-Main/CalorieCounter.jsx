@@ -30,7 +30,8 @@ function CalorieCounter({ username }) {
           return;
         }
 
-        const response = await fetch(`http://localhost:3001/fatfit/${username}`, { signal });
+        // Use API_URL from env, not hardcoded localhost
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/fatfit/${username}`, { signal });
 
         if (signal.aborted) {
           console.log("Fetch for user data was aborted (CalorieCounter).");
