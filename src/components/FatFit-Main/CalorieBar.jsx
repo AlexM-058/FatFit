@@ -89,12 +89,7 @@ const CalorieBar = ({ maxCalories, username }) => {
             width: `${displayProgressBarPercentage}%`
           }}
         />
-        {/* Healthy food image centered on the plate */}
-        <img
-          src="/assets/healthy-food.png"
-          className="plate-food-img"
-          alt="Healthy food"
-        />
+        
       </div>
       <div className="calorie-controls">
         <p className={isOverLimit ? "over-limit" : ""}>
