@@ -14,7 +14,19 @@ const ForYouRecipes = ({ username }) => {
   useEffect(() => {
     if (!username) return;
     const localKey = `ai_recipes_${username}`;
-    const cached = localStorage.getItem(localKey);
+    // --- Remove cache at 00:01 ---
+    const now = new Date();
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(0, 1, 0, 0); // 00:01
+    if (now > nextMidnight) {
+      // If it's after 00:01 today, set for tomorrow
+      nextMidnight.setDate(nextMidnight.getDate() + 1);
+    }
+    const msToClear = nextMidnight.getTime() - now.getTime();
+    const clearTimeoutId = setTimeout(() => {
+      localStorage.removeItem(localKey);
+    }, msToClear);
+
     const processData = (meal_plan) => {
       setBreakfastRecipes(
         Array.isArray(meal_plan.breakfast) ? meal_plan.breakfast : []
@@ -22,6 +34,7 @@ const ForYouRecipes = ({ username }) => {
       setLunchRecipes(Array.isArray(meal_plan.lunch) ? meal_plan.lunch : []);
       setDinnerRecipes(Array.isArray(meal_plan.dinner) ? meal_plan.dinner : []);
     };
+    const cached = localStorage.getItem(localKey);
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
@@ -56,6 +69,10 @@ const ForYouRecipes = ({ username }) => {
       })
       .catch((err) => setError(err.message || "Unknown error"))
       .finally(() => setLoading(false));
+
+    return () => {
+      clearTimeout(clearTimeoutId);
+    };
   }, [username]);
 
   let recipesToShow = [];

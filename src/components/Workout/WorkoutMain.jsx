@@ -12,21 +12,41 @@ const WorkoutMain = () => {
     if (!username) return;
     setLoading(true);
     setError(null);
+
+    const localKey = `ai_workout_${username}`;
+    const cached = localStorage.getItem(localKey);
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === "object") {
+          setWorkout(parsed);
+          setLoading(false);
+          setError(null);
+          return;
+        }
+      } catch (err) {
+        console.error("LocalStorage parse error:", err);
+        // ignore parse error, fallback to fetch
+      }
+    }
+
     fetch(`${API_URL}/api/fitness-tribe/workout/${username}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })
       .then(async (res) => {
         if (!res.ok) {
-          // Încearcă să citești textul răspunsului pentru debug
           const text = await res.text();
           console.error("Workout API error:", res.status, text);
           throw new Error(`Failed to fetch workout plan (status ${res.status})`);
         }
-        // Dacă răspunsul e ok, parsează ca JSON
         return res.json();
       })
-      .then((data) => setWorkout(data))
+      .then((data) => {
+        setWorkout(data);
+        // Save to localStorage
+        localStorage.setItem(localKey, JSON.stringify(data));
+      })
       .catch((err) => setError(err.message || "Unknown error"))
       .finally(() => setLoading(false));
   }, [username]);
