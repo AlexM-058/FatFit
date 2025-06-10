@@ -1,9 +1,11 @@
 .answers {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 20px ;
-    column-gap: 20px;
-    overflow: auto;
+  row-gap: 20px;
+  column-gap: 20px;
+  overflow: auto;
+  justify-content: center;
+  align-items: center;
 }
 .search-container{
     display: flex;

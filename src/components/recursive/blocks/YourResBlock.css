@@ -94,3 +94,17 @@
   box-shadow: 0 6px 24px #ffd16655;
   transform: translateY(-2px) scale(1.04);
 }
+
+@media (max-width: 650px) {
+  .your-res-popup {
+    max-width: 90vw !important;
+    width: 90vw !important;
+    max-height: 460px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 16px 8px 18px 8px !important;
+    border-radius: 14px !important;
+    font-size: 1em;
+    overflow-y: auto;
+  }
+}
