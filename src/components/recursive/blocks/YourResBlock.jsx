@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './YourResBlock.css';
+import "./YourResBlock.css";
 import { httpRequest } from "../../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -7,6 +7,12 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
   const [status, setStatus] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [servings, setServings] = useState(1);
+  const [expanded, setExpanded] = useState(false);
+
+  // Detect mobile using a media query (SSR safe)
+  const isMobile = typeof window !== "undefined"
+    ? window.matchMedia("(max-width: 650px)").matches
+    : false;
 
   const handleAddClick = () => {
     setShowPopup(true);
@@ -24,31 +30,23 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
       setStatus("Username missing. Cannot send data.");
       return;
     }
-
     const foodData = {
       name: recipe.name,
       calories: parseFloat(recipe.calories) * servings,
     };
-
     const payload = {
       mealType,
       foods: [foodData],
     };
-
     try {
-      console.log("Sending to database:", payload);
-
       const response = await httpRequest(`${API_URL}/api/recipes-calories/${username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         credentials: "include",
       });
-
       const result = await response.json();
-
       if (response.ok && result.success) {
-        console.log(`✅ Sent to database for user "${username}" successfully (added to food collection).`);
         if (onAddCalories) onAddCalories(foodData.calories);
         setStatus("✅ Recipe added successfully!");
         setTimeout(() => {
@@ -56,11 +54,9 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
         }, 1200);
       } else {
         setStatus(`❌ Failed: ${result.message || "Unknown error"}`);
-        console.error(`❌ Failed to send to database:`, result.message || "Unknown error");
       }
     } catch (error) {
       setStatus("❌ Network/server error: " + error.message);
-      console.error("❌ Could not send to database due to network/server error:", error.message);
     }
   };
 
@@ -68,34 +64,92 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
   const safeMealType = mealType || "meal";
 
   return (
-    <div className="your-res-block">
-      <strong>{recipe.name}</strong>
-      <p>Calories: {recipe.calories} kcal</p>
-      {Array.isArray(recipe.ingredients) && (
-        <div>
-          <b>Ingredients:</b>
-          <ul>
-            {recipe.ingredients.map((ing, idx) => (
-              <li key={idx}>
-                {ing.ingredient}
-                {ing.quantity && <> - {multiplyQuantity(ing.quantity, servings)}</>}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="your-res-block same-size-block">
+      {isMobile ? (
+        <>
+          <div
+            className="your-res-collapsed"
+            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+            onClick={() => setExpanded((v) => !v)}
+            tabIndex={0}
+            role="button"
+            aria-expanded={expanded}
+          >
+            <span
+              className="your-res-arrow"
+              style={{
+                display: "inline-block",
+                transition: "transform 0.2s",
+                transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+                fontSize: 22,
+                marginRight: 6,
+                color: "#7c3aed"
+              }}
+            >
+              ▶
+            </span>
+            <strong>{recipe.name}</strong>
+          </div>
+          {expanded && (
+            <div className="your-res-expanded">
+              <p>Calories: {recipe.calories} kcal</p>
+              {Array.isArray(recipe.ingredients) && (
+                <div>
+                  <b>Ingredients:</b>
+                  <ul>
+                    {recipe.ingredients.map((ing, idx) => (
+                      <li key={idx}>
+                        {ing.ingredient}
+                        {ing.quantity && <> - {multiplyQuantity(ing.quantity, servings)}</>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {recipe.recipe && (
+                <div>
+                  <b>How to cook:</b>
+                  <div>{recipe.recipe}</div>
+                </div>
+              )}
+              <div className="your-res-add-btn-row">
+                <button className="add-meal-btn" onClick={handleAddClick}>
+                  Add to {safeMealType.charAt(0).toUpperCase() + safeMealType.slice(1)}
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <strong>{recipe.name}</strong>
+          <p>Calories: {recipe.calories} kcal</p>
+          {Array.isArray(recipe.ingredients) && (
+            <div>
+              <b>Ingredients:</b>
+              <ul>
+                {recipe.ingredients.map((ing, idx) => (
+                  <li key={idx}>
+                    {ing.ingredient}
+                    {ing.quantity && <> - {multiplyQuantity(ing.quantity, servings)}</>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {recipe.recipe && (
+            <div>
+              <b>How to cook:</b>
+              <div>{recipe.recipe}</div>
+            </div>
+          )}
+          <div className="your-res-add-btn-row">
+            <button className="add-meal-btn" onClick={handleAddClick}>
+              Add to {safeMealType.charAt(0).toUpperCase() + safeMealType.slice(1)}
+            </button>
+          </div>
+        </>
       )}
-      {/* Adaugă și rețeta (modul de preparare) vizibilă direct */}
-      {recipe.recipe && (
-        <div>
-          <b>How to cook:</b>
-          <div>{recipe.recipe}</div>
-        </div>
-      )}
-      <div className="your-res-add-btn-row">
-        <button className="add-meal-btn" onClick={handleAddClick}>
-          Add to {safeMealType.charAt(0).toUpperCase() + safeMealType.slice(1)}
-        </button>
-      </div>
       {showPopup && (
         <div className="your-res-popup-overlay">
           <div className="your-res-popup">
@@ -134,7 +188,6 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
                   </ul>
                 </li>
               )}
-              {/* Adaugă și rețeta (modul de preparare) în popup */}
               {recipe.recipe && (
                 <li>
                   <b>How to cook:</b>
@@ -146,7 +199,7 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
               <button onClick={handleAddRecipe}>
                 Confirm Add to {safeMealType.charAt(0).toUpperCase() + safeMealType.slice(1)}
               </button>
-              <button className="your-res-popup-back-btn" onClick={handleClosePopup}>Back</button>
+              <button className="your-res-popup_back-btn" onClick={handleClosePopup}>Back</button>
             </div>
             {status && <div className="your-res-status">{status}</div>}
           </div>
@@ -155,15 +208,15 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
     </div>
   );
 
-   function multiplyQuantity(quantity, servings) {
-      const match = /^(\d+(?:\.\d+)?)([a-zA-Z]*)$/.exec(quantity.trim());
+  function multiplyQuantity(quantity, servings) {
+    const match = /^(\d+(?:\.\d+)?)([a-zA-Z]*)$/.exec(quantity.trim());
     if (!match) return quantity;
     const value = parseFloat(match[1]);
     const unit = match[2];
     return `${value * servings}${unit}`;
   }
 
-   function multiplyNumber(val, servings) {
+  function multiplyNumber(val, servings) {
     const num = parseFloat(val);
     if (isNaN(num)) return val;
     return num * servings;

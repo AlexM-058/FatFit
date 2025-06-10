@@ -1,5 +1,6 @@
 .recipes-main-container {
-  max-width: 900px;
+  width: 95%;
+  
   margin: 0 auto;
   padding: 24px 16px 32px 16px;
   background: #f8f6fb;
@@ -56,9 +57,7 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  height: 60vh;
-  max-height: 60vh;
-  min-height: 300px;
+  height: fit-content; 
   overflow-y: auto;
   padding-bottom: 8px;
   width: 100%;
@@ -75,12 +74,191 @@
   margin-top: 32px;
 }
 
+.your-res-block {
+  /* păstrează text-align: left pentru conținutul general */
+  text-align: left;
+  padding: 32px 32px 32px 32px;
+  background: #f6e6fa;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #caa1e2aa;
+  margin-bottom: 32px;
+  border: 1.5px solid #caa1e2;
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.2s;
+  max-height: 2000px; /* enough for desktop, will be overridden on mobile */
+}
+
+/* Arrow toggle for mobile */
+.your-res-block .mobile-toggle-arrow {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 2rem;
+  color: #7c3aed;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s;
+}
+
+.your-res-block .mobile-toggle-arrow.open {
+  transform: rotate(90deg);
+}
+
+/* Titlu și paragrafe la stânga, doar how-to-cook centrat */
+.your-res-block h3,
+.your-res-block p,
+.your-res-block b,
+.your-res-block .form-review,
+.your-res-block .form-review > div {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+  display: block;
+}
+
+.your-res-block .how-to-cook {
+  text-align: center;
+  margin: 24px auto 0 auto;
+  display: block;
+  background: linear-gradient(90deg, #c299dd 0%, #ffd166 100%);
+  color: #4b2776;
+  border-radius: 12px;
+  padding: 18px 24px;
+  font-size: 1.15em;
+  font-weight: 600;
+  box-shadow: 0 2px 16px #caa1e2aa;
+  border: 1.5px solid #ffd166;
+  letter-spacing: 0.5px;
+  transition: box-shadow 0.2s, background 0.2s;
+  animation: howtocook-pop 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes howtocook-pop {
+  0% { transform: scale(0.95); opacity: 0; }
+  80% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Ingrediente cu efecte vizuale */
+.your-res-block .ingredients-list {
+  margin: 18px 0 18px 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  display: block;
+  background: #f3eaff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #caa1e2aa;
+  border: 1px solid #e0c6f7;
+  min-width: 180px;
+  max-width: 90%;
+  position: relative;
+  overflow: hidden;
+  animation: fadein-ingredients 0.7s;
+}
+
+@keyframes fadein-ingredients {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.your-res-block .ingredients-list li {
+  padding: 10px 24px;
+  color: #7c3aed;
+  font-weight: 500;
+  font-size: 1.08em;
+  border-bottom: 1px solid #e0c6f7;
+  position: relative;
+  transition: background 0.2s, color 0.2s;
+  background: linear-gradient(90deg, #f3eaff 80%, #ffd16611 100%);
+  cursor: pointer;
+}
+.your-res-block .ingredients-list li:last-child {
+  border-bottom: none;
+}
+.your-res-block .ingredients-list li:hover {
+  background: linear-gradient(90deg, #ffd166 0%, #f3eaff 100%);
+  color: #4b2776;
+  box-shadow: 0 2px 12px #ffd16655;
+  z-index: 2;
+}
+
+/* Calories vizual */
+.your-res-block .calories-info {
+  display: inline-block;
+  background: linear-gradient(90deg, #ffd166 60%, #c299dd 100%);
+  color: #4b2776;
+  border-radius: 10px;
+  padding: 8px 20px;
+  font-size: 1.08em;
+  font-weight: 700;
+  margin: 18px 0;
+  box-shadow: 0 2px 12px #ffd16655;
+  border: 1.5px solid #c299dd;
+  letter-spacing: 0.5px;
+  animation: calories-pop 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes calories-pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  80% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.recipes-list-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  max-width: max-content;
+  align-items: stretch;
+}
+
+.recipes-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  width: 100%;
+  margin: 32px 0;
+}
+
+.recipes-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #c299dd;
+  border-top: 5px solid #ffd166;
+  border-radius: 50%;
+  animation: recipes-spin 1s linear infinite;
+  margin-bottom: 18px;
+}
+
+@keyframes recipes-spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.recipes-loading-text {
+  color: #7c3aed;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
 @media (max-width: 650px) {
   .recipes-main-container {
-    padding: 10px 2vw 18px 2vw;
+    min-width:350px ;
+    max-width: 500px;
     border-radius: 0;
     box-shadow: none;
-    min-height: 0;
+    min-height: fit-content;
+    overflow-y: auto;
   }
   .recipes-list-scroll {
     flex-direction: column;
@@ -112,5 +290,211 @@
   .recipes-list-scroll::-webkit-scrollbar-thumb {
     background: #c299dd;
     border-radius: 8px;
+  }
+  .your-res-block {
+    /* păstrează stilurile vizuale, dar nu ascunde nimic */
+    max-height: none;
+    min-height: 0;
+    padding-bottom: 24px;
+    box-shadow: 0 4px 24px #caa1e2aa;
+    overflow: visible;
+  }
+  .your-res-block.open {
+    max-height: none;
+    min-height: 0;
+    padding-bottom: 24px;
+    box-shadow: 0 4px 24px #caa1e2aa;
+  }
+  .your-res-block .mobile-toggle-arrow,
+  .your-res-block .mobile-title {
+    display: none !important;
+  }
+  .your-res-block .mobile-content {
+    display: block !important;
+    margin-top: 0;
+  }
+  /* Ajustează padding și fonturi pentru conținut */
+  .your-res-block .ingredients-list,
+  .your-res-block .how-to-cook,
+  .your-res-block .calories-info {
+    font-size: 1em;
+    padding: 10px 8px;
+  }
+}
+
+.your-res-popup {
+  background: #fffbea;
+  border-radius: 18px;
+  padding: 32px 36px 36px 36px;
+  min-width: 320px;
+  min-height: 180px;
+  box-shadow: 0 8px 40px #c299dd55, 0 2px 12px #ffd16655;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  z-index: 9999;
+  border: 2px solid #ffd166;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: popup-fadein 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes popup-fadein {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.97);
+    box-shadow: 0 2px 12px #ffd16633;
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -48%) scale(1.04);
+    box-shadow: 0 8px 40px #c299dd44, 0 2px 12px #ffd16644;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 8px 40px #c299dd55, 0 2px 12px #ffd16655;
+  }
+}
+
+.your-res-popup h3 {
+  color: #7c3aed;
+  margin-bottom: 18px;
+  font-size: 1.3em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.your-res-popup ul {
+  width: 100%;
+  margin: 0 0 18px 0;
+  padding: 0 0 0 10px;
+  font-size: 1.05em;
+}
+
+.your-res-popup li {
+  margin-bottom: 10px;
+  color: #4b2776;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.your-res-popup label {
+  font-weight: 500;
+  color: #7a4fa3;
+}
+
+.your-res-popup input[type="number"] {
+  border: 1.5px solid #ffd166;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 1em;
+  margin-left: 6px;
+  width: 56px;
+  background: #fff;
+  color: #4b2776;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.your-res-popup input[type="number"]:focus {
+  border: 1.5px solid #c299dd;
+  background: #f8f6fb;
+}
+
+.your-res-popup-btn-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+}
+
+.your-res-popup-btn-row button {
+  background: #ffd166;
+  color: #7c3aed;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 22px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #ffd16633;
+  transition:
+    background 0.22s cubic-bezier(.4,0,.2,1),
+    color 0.22s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.22s cubic-bezier(.4,0,.2,1),
+    transform 0.18s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.your-res-popup-btn-row button:hover,
+.your-res-popup-btn-row button:focus {
+  background: #ffe599;
+  color: #4b2776;
+  box-shadow: 0 8px 32px #ffd16677, 0 2px 8px #ffd16633;
+  transform: translateY(-2px) scale(1.04) rotate(-1deg);
+}
+
+.your-res-popup-btn-row button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s cubic-bezier(.4,0,.2,1), height 0.3s cubic-bezier(.4,0,.2,1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.your-res-popup-btn-row button:hover::after,
+.your-res-popup-btn-row button:focus::after {
+  width: 180%;
+  height: 400%;
+}
+
+.your-res-popup-back-btn {
+  background: #f3eaff !important;
+  color: #7c3aed !important;
+  border: 1.5px solid #c299dd !important;
+}
+
+.your-res-status {
+  margin-top: 14px;
+  font-size: 1.08em;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.2px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #ffd166  ;
+  color: #4b2776;
+  box-shadow: 0 2px 12px #ffd16644;
+  border: 1.5px solid #ffd166;
+  animation: status-pop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes status-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px #ffd16622;
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px #ffd16644;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 2px 12px #ffd16644;
   }
 }

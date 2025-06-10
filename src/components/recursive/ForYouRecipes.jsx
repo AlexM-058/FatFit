@@ -81,8 +81,9 @@ const ForYouRecipes = ({ username }) => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", margin: 32 }}>
-        Loading AI recipes...
+      <div className="recipes-loading-container">
+        <div className="recipes-spinner" />
+        <div className="recipes-loading-text">Loading AI recipes...</div>
       </div>
     );
   }
@@ -122,25 +123,27 @@ const ForYouRecipes = ({ username }) => {
       </div>
       <h3 className="recipes-meal-title">{mealTitle}</h3>
       <div className="recipes-list-scroll">
-        {recipesToShow.length === 0 ? (
-          <div className="recipes-empty">
-            No {mealTitle.toLowerCase()} recipes.
-          </div>
-        ) : (
-          recipesToShow.map((recipe, idx) => (
-            <YourResBlock
-              key={idx}
-              recipe={{
-                name: recipe.description || recipe.name || `Recipe ${idx + 1}`,
-                calories: recipe.total_calories || recipe.calories || 0,
-                ingredients: recipe.ingredients,
-                recipe: recipe.recipe,
-              }}
-              username={username}
-              mealType={mealTitle.toLowerCase()}
-            />
-          ))
-        )}
+        <div className="recipes-list-inner">
+          {recipesToShow.length === 0 ? (
+            <div className="recipes-empty">
+              No {mealTitle.toLowerCase()} recipes.
+            </div>
+          ) : (
+            recipesToShow.map((recipe, idx) => (
+              <YourResBlock
+                key={idx}
+                recipe={{
+                  name: recipe.description || recipe.name || `Recipe ${idx + 1}`,
+                  calories: recipe.total_calories || recipe.calories || 0,
+                  ingredients: recipe.ingredients,
+                  recipe: recipe.recipe,
+                }}
+                username={username}
+                mealType={mealTitle.toLowerCase()}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

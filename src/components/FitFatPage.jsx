@@ -370,7 +370,10 @@ const FitFatPage = () => {
       </div>
       <div className="main_fatfit">
         {loading ? (
-          <div style={{ padding: 24 }}>Loading user data...</div>
+          <div className="fatfit-loading-container">
+            <div className="fatfit-spinner" />
+            <div className="fatfit-loading-text">Loading user data...</div>
+          </div>
         ) : error ? (
           <div style={{ color: "red", padding: 24 }}>Error: {error}</div>
         ) : !userData || !userData.user ? (

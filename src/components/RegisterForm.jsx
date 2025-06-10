@@ -364,10 +364,13 @@ const RegisterForm = ({ onBackClick }) => {
       {step === 3 && (
         <div className="step-container">
           <h2>Step 3: Review & Submit</h2>
-          <div className="form-review">
-            {Object.entries(formData).map(([key, value]) => (
-              <div key={key}><strong>{key}:</strong> {value.toString()}</div>
-            ))}
+          <div className="your-res-block">
+            <h3>Your responses</h3>
+            <div className="form-review">
+              {Object.entries(formData).map(([key, value]) => (
+                <div key={key}><strong>{key}:</strong> {value.toString()}</div>
+              ))}
+            </div>
           </div>
           <div className="form-navigation">
             <button

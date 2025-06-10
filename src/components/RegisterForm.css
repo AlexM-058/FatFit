@@ -187,6 +187,58 @@
   place-items: center;
   margin-left:20px ;
 }
+.your-res-block {
+  background: #f6e6fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #caa1e2;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #caa1e2;
+  transition: box-shadow 0.2s;
+}
+
+.your-res-block h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #7c3aed; /* mov intens */
+  font-weight: 600;
+  font-size: 1.2em;
+  letter-spacing: 0.5px;
+}
+
+.your-res-block .form-review > div {
+  margin-bottom: 8px;
+  color: #444;
+  font-size: 1em;
+}
+
+.your-res-block strong {
+  color: #a259e6; /* mov pastel */
+}
+
+/* Exemplu pentru butonul "Add to" cu o culoare complementară (galben-auriu) */
+.add-to-btn {
+  background: #ffd166; /* galben-auriu, complement movului */
+  color: #7c3aed;      /* mov intens pentru text */
+  border: none;
+  border-radius: 16px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px #caa1e233;
+}
+
+.add-to-btn:hover {
+  background: #ffe599;
+  color: #4b2776;
+  box-shadow: 0 4px 16px #caa1e255;
+}
+
 @media (max-width: 650px) {
   .register-form {
     width: 90%;
