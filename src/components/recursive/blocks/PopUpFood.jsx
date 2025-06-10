@@ -76,7 +76,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
   };
 
   return (
-    <div className="food-block-popup">
+    <div className="food-block-popup mobile-food-block-popup">
       <h3>{food.food_name}</h3>
       <p><b>Calories:</b> {food.food_kcal} kcal / 100g</p>
       <div style={{ margin: "10px 0" }}>
@@ -129,7 +129,6 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
           <option value="snacks">Snacks</option>
         </select>
       </div>
-      {/* Eliminat dublura pentru protein/carbs/fat */}
       {food.brand_name && <p><b>Brand:</b> {food.brand_name}</p>}
       {food.food_description && <p><b>Description:</b> {food.food_description}</p>}
       {food.serving_sizes && Array.isArray(food.serving_sizes) && food.serving_sizes.length > 0 && (

@@ -487,3 +487,7 @@ grid-area: main_fatfit;
   text-shadow: 0 2px 8px #c299dd22;
 }
 
+footer, .footer {
+  display: none !important;
+}
+

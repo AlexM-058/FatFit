@@ -55,6 +55,42 @@
   }
 }
 
+@media (max-width: 650px) {
+  .food-block {
+    min-width: 96vw;
+    max-width: 99vw;
+    min-height: 120px;
+    max-height: fit-content;
+    padding: 12px 6px 10px 6px;
+    font-size: 0.98em;
+    border-radius: 12px;
+  }
+  .food-block-popup,
+  .mobile-food-block-popup {
+    min-width: 96vw !important;
+    max-width: 99vw !important;
+    min-height: 0 !important;
+    padding: 18px 6vw 18px 6vw !important;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 14px !important;
+    font-size: 1em;
+  }
+  .food-block-popup h3 {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+  }
+  .popup-btn-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .popup-mealtype-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
 @media (max-width: 599px) {
   .food-block {
     flex: 0 0 90%;
