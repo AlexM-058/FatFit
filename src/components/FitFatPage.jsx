@@ -48,6 +48,7 @@ const FitFatPage = () => {
             console.log("Current cookies before fetch:", document.cookie);
 
             response = await httpRequest(`${API_URL}/fatfit/${username}`, {
+              method: "GET",
               signal,
               credentials: "include"
             });
@@ -76,7 +77,7 @@ const FitFatPage = () => {
             localStorage.removeItem("username");
             setError("Session expired or unauthorized. Please log in again.");
             setLoading(false);
-            
+            navigate("/", { replace: true });
             return;
           }
 
@@ -86,7 +87,7 @@ const FitFatPage = () => {
           if (data && data.data === 'Protected content') {
             setError("Session expired or unauthorized. Please log in again.");
             setLoading(false);
-           
+            navigate("/", { replace: true });
             return;
           }
           setUserData(data);
