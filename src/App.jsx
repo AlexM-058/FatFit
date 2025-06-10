@@ -13,6 +13,7 @@ import MealsMain from './components/Food/MealsMain'; // Ensure MealsMain is used
 import RecipesMain from './components/Recipes/RecipesMain'; // Ensure RecipesMain is used
 import './App.css';
 
+
 function MainContent() {
   const [view, setView] = useState('main');
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ function MainContent() {
     setView('main'); // Reset view to main (optional, for safety)
     navigate(`/fatfit/${loggedInUsername}`); // Go to FatFitPage after login
   };
+
+
 
   return (
     <div className="TheRealMain">
