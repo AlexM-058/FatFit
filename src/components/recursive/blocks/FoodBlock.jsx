@@ -9,6 +9,11 @@ function FoodBlock({ food, calories, username }) {
     setShowPopup(true);
   };
 
+  // Funcție pentru a închide pop-up-ul după adăugare calorii sau back
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <>
       <div className="food-block" style={showPopup ? { pointerEvents: "none", filter: "blur(2px)" } : {}}>
@@ -28,22 +33,14 @@ function FoodBlock({ food, calories, username }) {
       </div>
       {showPopup && (
         <>
-          <div className="food-block-blur-overlay" style={{
-            position: "fixed",
-            zIndex: 9998,
-            left: 0,
-            top: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(220, 210, 255, 0.18)",
-            backdropFilter: "blur(4px)"
-          }} />
+          <div className="food-block-blur-overlay" />
           <div style={{ zIndex: 9999, position: "fixed", left: 0, top: 0, width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <PopupFood
               food={food}
               calories={calories}
-              onClose={() => setShowPopup(false)}
+              onClose={handleClosePopup}
               username={username}
+              // Asigură-te că PopupFood apelează props.onClose după adăugare calorii sau back
             />
           </div>
         </>

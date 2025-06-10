@@ -27,7 +27,7 @@
   transition: box-shadow 0.2s, transform 0.18s, border 0.2s;
   position: relative;
   overflow: hidden;
-  padding: 18px 12px 14px 12px;
+
   justify-content: center;
 }
 
@@ -114,4 +114,93 @@
   animation: popup-fadein 0.5s cubic-bezier(.68,-0.55,.27,1.55);
 }
 
-/* ...alte stiluri specifice FoodBlock dacă există... */
+.food-block-popup h3 {
+  color: #7c3aed;
+  margin-bottom: 18px;
+  font-size: 1.3em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.food-block-popup label {
+  font-weight: 500;
+  color: #7a4fa3;
+  margin-bottom: 12px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food-block-popup input[type="number"] {
+  border: 1.5px solid #ffd166;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 1em;
+  margin-left: 6px;
+  width: 80px;
+  background: #fff;
+  color: #4b2776;
+  outline: none;
+  transition: border 0.2s;
+  text-align: right;
+}
+
+.food-block-popup input[type="number"]:focus {
+  border: 1.5px solid #c299dd;
+  background: #f8f6fb;
+}
+
+.food-block-popup .popup-btn-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+}
+
+.food-block-popup .popup-btn {
+  background: #ffd166;
+  color: #7c3aed;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 22px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #ffd16633;
+  transition:
+    background 0.22s cubic-bezier(.4,0,.2,1),
+    color 0.22s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.22s cubic-bezier(.4,0,.2,1),
+    transform 0.18s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food-block-popup .popup-btn:hover,
+.food-block-popup .popup-btn:focus {
+  background: #ffe599;
+  color: #4b2776;
+  box-shadow: 0 8px 32px #ffd16677, 0 2px 8px #ffd16633;
+  transform: translateY(-2px) scale(1.04) rotate(-1deg);
+}
+
+.food-block-popup .popup-btn-cancel {
+  background: #f3eaff !important;
+  color: #e74c3c !important;
+  border: 1.5px solid #c299dd !important;
+}
+
+.food-block-popup .popup-error {
+  margin-top: 14px;
+  font-size: 1em;
+  color: #e74c3c;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
