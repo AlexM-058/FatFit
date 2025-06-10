@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { httpRequest } from "../../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL
 import '../blocks/PopUpFood.css'; // Ensure this file exists and contains the necessary styles
 const FoodBlock = ({ food, onAddCalories, onClose, username: propUsername }) => {
@@ -42,7 +43,7 @@ const FoodBlock = ({ food, onAddCalories, onClose, username: propUsername }) => 
     try {
       console.log("Sending to database:", payload);
 
-      const response = await fetch(`${API_URL}/api/calories/${username}`, {
+      const response = await httpRequest(`${API_URL}/api/calories/${username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
