@@ -14,3 +14,32 @@
     overflow-y: auto;
 
 }
+
+.search-container input[type="text"] {
+    width: 240px;
+    max-width: 90vw;
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 14px;
+    border: 2px solid #c299dd;
+    background: #f8f6fb;
+    color: #7c3aed;
+    margin-bottom: 20px;
+    outline: none;
+    box-shadow: 0 2px 12px #c299dd22;
+    transition: border 0.22s, box-shadow 0.22s, background 0.22s, color 0.22s;
+}
+
+.search-container input[type="text"]:hover {
+    border: 2px solid #ffd166;
+    background: #fffbea;
+    color: #7c3aed;
+    box-shadow: 0 4px 16px #ffd16633;
+}
+
+.search-container input[type="text"]:focus {
+    border: 2.5px solid #7c3aed;
+    background: #fff;
+    color: #4b2776;
+    box-shadow: 0 6px 24px #c299dd44;
+}
