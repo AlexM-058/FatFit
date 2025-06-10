@@ -10,7 +10,6 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
 
   const [grams, setGrams] = useState(100);
   const [mealType, setMealType] = useState("lunch");
-  const [portions, setPortions] = useState(1); // pentru your recipes
   const [error, setError] = useState("");
 
   const caloriesPer100g = Number(food.food_kcal) || 0;
@@ -18,12 +17,10 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
   const carbsPer100g = Number(food.food_carbs) || 0;
   const fatPer100g = Number(food.food_fat) || 0;
 
-  // Folosește portions dacă există (pentru your recipes)
-  const totalGrams = grams * (portions || 1);
-  const calories = totalGrams ? Math.round((caloriesPer100g * totalGrams) / 100) : 0;
-  const protein = totalGrams ? ((proteinPer100g * totalGrams) / 100).toFixed(2) : "0.00";
-  const carbs = totalGrams ? ((carbsPer100g * totalGrams) / 100).toFixed(2) : "0.00";
-  const fat = totalGrams ? ((fatPer100g * totalGrams) / 100).toFixed(2) : "0.00";
+  const calories = grams ? Math.round((caloriesPer100g * grams) / 100) : 0;
+  const protein = grams ? ((proteinPer100g * grams) / 100).toFixed(2) : "0.00";
+  const carbs = grams ? ((carbsPer100g * grams) / 100).toFixed(2) : "0.00";
+  const fat = grams ? ((fatPer100g * grams) / 100).toFixed(2) : "0.00";
 
   const handleAddCalories = async () => {
     if (!username) {
@@ -78,35 +75,10 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
     }
   };
 
-  const handlePortionsChange = (e) => {
-    const val = e.target.value;
-    // Permite gol sau număr pozitiv
-    if (val === "" || (/^\d+$/.test(val) && Number(val) > 0)) {
-      setPortions(val === "" ? "" : Number(val));
-      setError("");
-    }
-  };
-
   return (
     <div className="food-block-popup">
       <h3>{food.food_name}</h3>
       <p><b>Calories:</b> {food.food_kcal} kcal / 100g</p>
-      {/* Portion selector pentru your recipes */}
-      <div style={{ margin: "10px 0" }}>
-        <label>
-          <b>Portions:</b>{" "}
-          <input
-            type="number"
-            min={1}
-            max={20}
-            step={1}
-            value={portions}
-            onChange={handlePortionsChange}
-            placeholder="portions"
-            style={{ width: 70, marginLeft: 8 }}
-          />
-        </label>
-      </div>
       <div style={{ margin: "10px 0" }}>
         <label>
           <b>Select grams:</b>{" "}
@@ -122,7 +94,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
           /> g
         </label>
         <div style={{ marginTop: 6 }}>
-          <b>Total for {totalGrams || 0}g ({portions || 1} portion{(portions || 1) > 1 ? "s" : ""}):</b>
+          <b>Total for {grams || 0}g:</b>
           <ul style={{ margin: 0, paddingLeft: 18 }}>
             <li>Calories: {calories} kcal</li>
             <li>Protein: {protein} g</li>
@@ -157,9 +129,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
           <option value="snacks">Snacks</option>
         </select>
       </div>
-      <p><b>Protein:</b> {food.food_protein} g / 100g</p>
-      <p><b>Carbs:</b> {food.food_carbs} g / 100g</p>
-      <p><b>Fat:</b> {food.food_fat} g / 100g</p>
+      {/* Eliminat dublura pentru protein/carbs/fat */}
       {food.brand_name && <p><b>Brand:</b> {food.brand_name}</p>}
       {food.food_description && <p><b>Description:</b> {food.food_description}</p>}
       {food.serving_sizes && Array.isArray(food.serving_sizes) && food.serving_sizes.length > 0 && (

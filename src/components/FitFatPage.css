@@ -101,8 +101,9 @@ z-index: auto;
 grid-area: main_fatfit;
     margin-top: 150px;
     padding: 0 0 32px 0;
-    overflow: scroll;
-
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 150px);
   }
   .head{
     grid-area: head
