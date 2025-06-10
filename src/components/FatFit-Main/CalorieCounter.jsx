@@ -11,125 +11,84 @@ import { httpRequest } from '../../utils/http';
 const API_URL = import.meta.env.VITE_API_URL;
 
 function CalorieCounter({ username }) {
-  const [currentCalories, setCurrentCalories] = useState(0);
   const [maxCalories, setMaxCalories] = useState(null);
-  const [loadingInitialData, setLoadingInitialData] = useState(true);
-  const [errorInitialData, setErrorInitialData] = useState(null);
+  const [currentCalories, setCurrentCalories] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch user data and calories
+  // Fetch user calorie target only
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    async function fetchUserDataAndDailyTarget() {
-      try {
-        setLoadingInitialData(true);
-        setErrorInitialData(null);
-
-        if (typeof username !== 'string' || !username) {
-          setErrorInitialData("Username not available. Please log in.");
-          setLoadingInitialData(false);
-          return;
+    if (!username) return;
+    setLoading(true);
+    setError(null);
+    httpRequest(`${API_URL}/fatfit/${username}`, {
+      method: "GET",
+      credentials: "include"
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({ message: res.statusText }));
+          throw new Error(errorData.message || "Error loading user data.");
         }
-
-        const response = await httpRequest(`${API_URL}/fatfit/${username}`, {
-          method: "GET",
-          credentials: "include",
-          signal
-        });
-
-        if (signal.aborted) return;
-
-        if (response.status === 401) {
-          setErrorInitialData("Session expired or unauthorized. Please log in again.");
-          setLoadingInitialData(false);
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: response.statusText }));
-          setErrorInitialData(errorData.message || "Error loading user data.");
-          return;
-        }
-        const data = await response.json();
+        const data = await res.json();
         if (data && data.data === 'Protected content') {
-          setErrorInitialData("Session expired or unauthorized. Please log in again.");
-          setLoadingInitialData(false);
-          return;
+          throw new Error("Session expired or unauthorized. Please log in again.");
         }
         setMaxCalories(data.dailyCalorieTarget);
-
-        // --- Extract calories from all meals ---
-        let totalCalories = 0;
-        // Fetch all foods for each meal and sum calories
-        let allFoods = [];
-        const mealTypes = ["breakfast", "lunch", "dinner", "snacks"];
-        for (const mealType of mealTypes) {
-          try {
-            const res = await httpRequest(`${API_URL}/caloriecounter/${username}/${mealType}`, {
-              method: "GET",
-              credentials: "include"
-            });
-            // Defensive: check for valid JSON and foods array
-            let mealData = {};
-            try {
-              mealData = await res.json();
-            } catch {
-              mealData = {};
-            }
-            if (Array.isArray(mealData.foods)) {
-              allFoods = allFoods.concat(mealData.foods.filter(f => typeof f.calories !== "undefined"));
-            }
-          } catch (e) {
-            console.error(`Error fetching ${mealType} data:`, e);
-            // Ignore errors for individual meals
-          }
-        }
-        // Defensive: sum only numbers
-        totalCalories = allFoods.reduce((acc, food) => acc + (Number(food.calories) || 0), 0);
-        setCurrentCalories(totalCalories);
-
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          setErrorInitialData(err.message || "Failed to load initial data.");
-        }
-      } finally {
-        setLoadingInitialData(false);
-      }
-    }
-
-    fetchUserDataAndDailyTarget();
-
-    return () => {
-      controller.abort();
-    };
-  }, [username, refreshKey]); // <-- refreshKey here
+      })
+      .catch(err => setError(err.message || "Failed to load user data."))
+      .finally(() => setLoading(false));
+  }, [username]);
 
   // Callback to trigger refresh from children
   const handleFoodChange = useCallback(() => {
     setRefreshKey((k) => k + 1);
   }, []);
 
-  if (loadingInitialData) return <p>Loading user calorie data...</p>;
-  if (errorInitialData) return <div className="error-message">Error: {errorInitialData}</div>;
+  // Fetch total calories from all meals
+  useEffect(() => {
+    if (!username) return;
+    let isMounted = true;
+    const mealTypes = ["breakfast", "lunch", "dinner", "snacks"];
+    Promise.all(
+      mealTypes.map(mealType =>
+        httpRequest(`${API_URL}/caloriecounter/${username}/${mealType}`, {
+          method: "GET",
+          credentials: "include"
+        })
+          .then(async res => {
+            let mealData = {};
+            try { mealData = await res.json(); } catch { mealData = {}; }
+            return Array.isArray(mealData.foods)
+              ? mealData.foods.filter(f => typeof f.calories !== "undefined")
+              : [];
+          })
+          .catch(() => [])
+      )
+    ).then(results => {
+      if (!isMounted) return;
+      const allFoods = results.flat();
+      const total = allFoods.reduce((acc, food) => acc + (Number(food.calories) || 0), 0);
+      setCurrentCalories(total);
+    });
+    return () => { isMounted = false; };
+  }, [username, refreshKey]);
+
+  if (loading) return <p>Loading user calorie data...</p>;
+  if (error) return <div className="error-message">Error: {error}</div>;
   if (maxCalories === null) return <p>No daily calorie target available for this user.</p>;
 
   return (
     <div className="calorie-counter-container" style={{ overflowY: "auto", maxHeight: "80vh" }}>
       <div className="calorie-counter-header pretty-header">
         <div className="header-bg-deco"></div>
-        <h2 className="header-title">
-          Calorie Monitoring
-        </h2>
+        <h2 className="header-title">Calorie Monitoring</h2>
         <p className="header-target">
           Daily target: <strong>{maxCalories} kcal</strong>
         </p>
         <div className="header-bar-wrap">
-          <CalorieBar
-            maxCalories={maxCalories}
-            currentCalories={currentCalories}
-          />
+          <CalorieBar maxCalories={maxCalories} currentCalories={currentCalories} />
         </div>
       </div>
       <div className="meal-sections">
