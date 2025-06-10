@@ -163,6 +163,12 @@ const RegisterForm = ({ onBackClick }) => {
       if (quizResult.success) {
         alert("Registration and quiz submitted!");
       } else {
+        console.log("Quiz submission failed. Backend response:", quizResult);
+        if (!quizRes.ok) {
+          console.log("Backend returned error status:", quizRes.status, quizRes.statusText);
+        } else {
+          console.log("Frontend sent data:", { username, answers: quizAnswers });
+        }
         alert("Quiz submission failed.");
       }
     } catch (err) {
