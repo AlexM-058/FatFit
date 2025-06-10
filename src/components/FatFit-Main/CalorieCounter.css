@@ -113,3 +113,8 @@
     max-width: 98vw;
   }
 }
+.calorie-counter-container {
+  /* ...existing code... */
+  background: linear-gradient(to bottom, #fff 0%, #ffe5c2 100%);
+  min-height: 100vh;
+}

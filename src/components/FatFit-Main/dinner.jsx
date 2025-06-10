@@ -3,7 +3,7 @@ import "./breakfest.css";
 import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Dinner({ username, onFoodChange }) {
+function Dinner({ username, onFoodChange, refreshKey }) {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,7 +25,7 @@ function Dinner({ username, onFoodChange }) {
       })
       .catch((err) => setError(err.message || "Unknown error"))
       .finally(() => setLoading(false));
-  }, [username]);
+  }, [username, refreshKey]);
 
   const handleDelete = async (foodName) => {
     if (!window.confirm(`Are you sure you want to delete '${foodName}' from dinner?`)) return;
@@ -72,9 +72,24 @@ function Dinner({ username, onFoodChange }) {
       </h4>
       {expanded && (
         <div className="meal-box-expanded">
-          {loading && <div>Loading dinner foods...</div>}
-          {error && <div style={{ color: "red" }}>{error}</div>}
-          {foods.length === 0 && !loading && <div>No dinner foods for today.</div>}
+          {loading && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "32px 0" }}>
+              <div className="loader-animation" style={{
+                width: 48,
+                height: 48,
+                border: "6px solid #f3f3f3",
+                borderTop: "6px solid #e67e22",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite",
+                marginBottom: 16
+              }} />
+              <div style={{ fontWeight: 500, fontSize: 18, color: "#e67e22" }}>
+                Preparing your data...
+              </div>
+            </div>
+          )}
+          {!loading && error && <div style={{ color: "red" }}>{error}</div>}
+          {!loading && foods.length === 0 && !error && <div>No dinner foods for today.</div>}
           <ul style={{ listStyle: "none", padding: 0 }}>
             {foods.map((food, idx) => (
               <li key={idx} className="meal-food-row">
@@ -163,6 +178,14 @@ function Dinner({ username, onFoodChange }) {
           </div>
         </div>
       )}
+      <style>
+        {`
+        @keyframes spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
+        }
+        `}
+      </style>
     </div>
   );
 }

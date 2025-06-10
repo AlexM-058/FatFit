@@ -109,7 +109,37 @@ function CalorieCounter({ username }) {
     };
   }, [username, refreshBarKey]);
 
-  // Adaugă refreshKey ca prop pentru fiecare masă și folosește funcții dedicate pentru refresh
+  // Adaugă aceeași animație de loading pe mijlocul paginii când se încarcă datele inițiale.
+  if (loadingInitialData) return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "64px 0" }}>
+      <div className="loader-animation" style={{
+        width: 64,
+        height: 64,
+        border: "8px solid #f3f3f3",
+        borderTop: "8px solid #3498db",
+        borderRadius: "50%",
+        animation: "spin 1s linear infinite",
+        marginBottom: 24
+      }} />
+      <div style={{ fontWeight: 600, fontSize: 22, color: "#3498db" }}>
+        Preparing your data...
+      </div>
+      <style>
+        {`
+        @keyframes spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
+        }
+        `}
+      </style>
+    </div>
+  );
+
+  if (errorInitialData) {
+    return <div className="error">{errorInitialData}</div>;
+  }
+
+  // Callbacks for each meal to refresh only that meal and the calorie bar
   const handleBreakfastChange = useCallback(() => {
     setRefreshBarKey(k => k + 1);
     setRefreshBreakfast(k => k + 1);
@@ -126,14 +156,6 @@ function CalorieCounter({ username }) {
     setRefreshBarKey(k => k + 1);
     setRefreshSnacks(k => k + 1);
   }, []);
-
-  if (loadingInitialData) {
-    return <div>Loading...</div>;
-  }
-
-  if (errorInitialData) {
-    return <div className="error">{errorInitialData}</div>;
-  }
 
   return (
     <div className="calorie-counter-container" style={{ overflowY: "auto", maxHeight: "80vh" }}>
