@@ -235,14 +235,6 @@ const FitFatPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    // Redirect to home if page is loaded directly and userData is missing
-    if (!userData && !loading && !error) {
-      navigate("/", { replace: true });
-    }
-     
-  }, [userData, loading, error, navigate]);
-
   return (
     <div className="fatfit-container">
       <div className="head" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001, width: "100vw" }}>
