@@ -133,13 +133,13 @@ function CalorieCounter({ username }) {
       <div className="loader-animation" style={{
         width: 64,
         height: 64,
-        border: "8px solid #f3f3f3",
-        borderTop: "8px solid #3498db",
+        border: "8px solid rgb(216, 148, 255)",
+        borderTop: "8px solid rgb(219, 133, 52)",
         borderRadius: "50%",
         animation: "spin 1s linear infinite",
         marginBottom: 24
       }} />
-      <div style={{ fontWeight: 600, fontSize: 22, color: "#3498db" }}>
+      <div style={{ fontWeight: 600, fontSize: 22, color: "rgb(219, 133, 52)" }}>
         Preparing your data...
       </div>
       <style>

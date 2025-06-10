@@ -236,11 +236,35 @@ const RegisterForm = ({ onBackClick }) => {
             {quizData.length > 0 && quizData[currentQuestionIndex] ? (
               <>
                 <p>{quizData[currentQuestionIndex].question}</p>
-                {quizData[currentQuestionIndex].type === 'text' && (
+                {/* Conditional rendering for questions with conditionalOn */}
+                {quizData[currentQuestionIndex].conditionalOn ? (() => {
+                  const cond = quizData[currentQuestionIndex].conditionalOn;
+                  const prevAnswer = formData[cond.question];
+                  if (prevAnswer !== cond.value) {
+                    // If condition not met, skip to next question
+                    setTimeout(() => {
+                      setCurrentQuestionIndex(idx => {
+                        // Prevent infinite loop
+                        if (idx < quizData.length - 1) return idx + 1;
+                        return idx;
+                      });
+                    }, 0);
+                    return null;
+                  }
+                  return null; // Will render below if condition is met
+                })() : null}
+                {/* Render text input if no conditionalOn or condition is met */}
+                {(
+                  !quizData[currentQuestionIndex].conditionalOn ||
+                  (quizData[currentQuestionIndex].conditionalOn &&
+                    formData[quizData[currentQuestionIndex].conditionalOn.question] ===
+                      quizData[currentQuestionIndex].conditionalOn.value)
+                ) && quizData[currentQuestionIndex].type === 'text' && (
                   <input
                     type="text"
                     className="form-input Input_quiz"
                     value={formData[quizData[currentQuestionIndex].question] || ""}
+                    placeholder={quizData[currentQuestionIndex].placeholder || ""}
                     onChange={e =>
                       handleChange(
                         quizData[currentQuestionIndex].question,
@@ -248,7 +272,6 @@ const RegisterForm = ({ onBackClick }) => {
                         'text'
                       )
                     }
-                    // Reset value when question changes
                     key={quizData[currentQuestionIndex].question + currentQuestionIndex}
                   />
                 )}
