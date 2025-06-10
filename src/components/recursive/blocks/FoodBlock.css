@@ -18,7 +18,7 @@
   min-width: 220px;
   max-width: 220px;
   min-height: 180px;
-  max-height: 180px;
+  max-height: fit-content;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -79,6 +79,39 @@
   font-size: 0.98rem;
   text-align: center;
   width: 100%;
+}
+
+/* Blur overlay for FoodBlock popup */
+.food-block-blur-overlay {
+  position: fixed;
+  z-index: 9998;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(220, 210, 255, 0.18);
+  backdrop-filter: blur(4px);
+  pointer-events: all;
+}
+
+/* Popup for FoodBlock add */
+.food-block-popup {
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #fffbea;
+  border-radius: 18px;
+  padding: 32px 36px 36px 36px;
+  min-width: 320px;
+  min-height: 180px;
+  box-shadow: 0 8px 40px #c299dd55, 0 2px 12px #ffd16655;
+  border: 2px solid #ffd166;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: popup-fadein 0.5s cubic-bezier(.68,-0.55,.27,1.55);
 }
 
 /* ...alte stiluri specifice FoodBlock dacă există... */
