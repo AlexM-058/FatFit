@@ -17,8 +17,13 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
     const authService = new AuthService();
     const success = await authService.login(username, password);
 
+    // Debug: vezi ce token ai primit și ce user e setat
+    console.log("Token in cookies:", document.cookie);
+    // Poți verifica și userul din store dacă vrei:
+    // import { useAuthStore } from "../stores/authStore";
+    // console.log("User in store:", useAuthStore.getState().user);
+
     if (success) {
-      // Userul și tokenul sunt deja setate în AuthService
       if (onSubmit) onSubmit(username);
     } else {
       setError("Login failed. Please check your credentials.");
