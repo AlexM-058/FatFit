@@ -1,7 +1,6 @@
 import { useAuthStore } from '../stores/authStore';
 import { getToken } from './jwt';
 import { toast } from 'react-toastify';
-import defaultToastOptions from './toast';
 
 export const httpRequest = async (url, options = {}, undefinedContentType = false) => {
     try {
@@ -52,5 +51,5 @@ const handleTokenExpired = () => {
 
     setTimeout(() => {
         window.location.reload();
-    }, defaultToastOptions.autoClose);
+    }, 3000); // 3 secunde timeout default
 };

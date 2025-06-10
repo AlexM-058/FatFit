@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { httpRequest } from "../utils/http";
 import { getUser, removeToken, setToken } from "../utils/jwt";
-import { useAuthStore } from "../stores/authStore";
+import { useAuthStore } from "@stores/authStore";
 
 export default class AuthService {
 	// URL API
