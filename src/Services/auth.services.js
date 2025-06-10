@@ -9,12 +9,15 @@ export default class AuthService {
 
 	constructor() {
 		this.url = import.meta.env.VITE_API_URL;
+		if (!this.url.endsWith('/')) {
+			this.url += '/';
+		}
 	}
 
 	// Login user
 	async login(userId, password) {
 		try {
-			const response = await httpRequest(this.url + "users/login", {
+			const response = await httpRequest(this.url + "login", {
 				method: "POST",
 				body: JSON.stringify({ userId, password }),
 			});
