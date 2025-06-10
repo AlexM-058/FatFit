@@ -34,18 +34,19 @@ const CalorieBar = ({ maxCalories, currentCalories, loading }) => {
   const safeMax = Number(maxCalories) > 0 ? Number(maxCalories) : 1;
   const safeCurrent = Number(currentCalories) >= 0 ? Number(currentCalories) : 0;
   const percentageForBar = (safeCurrent / safeMax) * 100;
-  const displayProgressBarPercentage = Math.min(100, Math.max(0, percentageForBar));
+  // Folosește direct percentageForBar pentru logică
   const isOverLimit = safeCurrent > safeMax;
 
   // Color logic
   let barColor = "#8e44ad"; // mov (purple)
   if (isOverLimit) barColor = "#e67e22"; // portocaliu (orange)
-  else if (displayProgressBarPercentage >= 100) barColor = "#8e44ad"; // mov la 100%
+  else if (percentageForBar >= 100) barColor = "#8e44ad"; // mov la 100%
 
   // Dot color logic
   let dotColor = barColor;
 
   return (
+    <div>
     <div style={{
       width: "100%",
       maxWidth: 420,
@@ -66,7 +67,7 @@ const CalorieBar = ({ maxCalories, currentCalories, loading }) => {
       }} />
       {/* Bar fill */}
       <div style={{
-        width: `${displayProgressBarPercentage}%`,
+        width: `${Math.min(percentageForBar, 100)}%`,
         height: 8,
         background: barColor,
         borderRadius: 8,
@@ -79,7 +80,7 @@ const CalorieBar = ({ maxCalories, currentCalories, loading }) => {
       {/* Dot */}
       <div style={{
         position: "absolute",
-        left: `calc(${displayProgressBarPercentage}% - 12px)`,
+        left: `calc(${Math.min(percentageForBar, 100)}% - 12px)`,
         top: "50%",
         transform: "translateY(-50%)",
         width: 24,
@@ -90,19 +91,31 @@ const CalorieBar = ({ maxCalories, currentCalories, loading }) => {
         boxShadow: isOverLimit ? "0 0 8px #e67e22" : "0 0 8px #8e44ad",
         transition: "background 0.3s, left 0.3s"
       }} />
-      {/* Value label */}
-      <div style={{
-        position: "absolute",
-        left: `calc(${displayProgressBarPercentage}% - 24px)`,
-        top: 28,
-        fontWeight: "bold",
-        color: isOverLimit ? "#e67e22" : "#8e44ad",
-        fontSize: 14,
-        minWidth: 48,
-        textAlign: "center"
-      }}>
-        {safeCurrent} / {safeMax} kcal
-      </div>
+      {/* Value label above bar, show only if <= 100% */}
+      {percentageForBar <= 100 && (
+        <div
+          style={{
+            position: "absolute",
+            left: `calc(${Math.min(percentageForBar, 100)}% - 24px)`,
+            top: 28,
+            fontWeight: "bold",
+            color: isOverLimit ? "#e67e22" : "#8e44ad",
+            fontSize: 14,
+            minWidth: 48,
+            textAlign: "center"
+          }}
+        >
+          {safeCurrent} / {safeMax} kcal
+        </div>
+      )}
+     
+      
+    </div>
+    {percentageForBar > 100 && (
+        <div className="calorie-bar-label">
+          {safeCurrent} / {safeMax} kcal
+        </div>
+      )}
     </div>
   );
 };

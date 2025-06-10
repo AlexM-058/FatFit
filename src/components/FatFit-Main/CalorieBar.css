@@ -96,3 +96,16 @@
   .calorie-bar-filler {
     display: none !important;
   }
+
+  .calorie-bar-label {
+    margin-top: 15px;
+    
+    color: #e67e22;
+    font-weight: bold;
+    font-size: 15px;
+    min-width: 60px;
+    text-align: center;
+    
+    padding: 4px 12px;
+    
+  }

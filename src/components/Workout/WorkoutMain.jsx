@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { httpRequest } from "../../utils/http";
+import "./WorkoutMain.css";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const WorkoutMain = () => {
@@ -53,57 +54,59 @@ const WorkoutMain = () => {
   }, [username]);
 
   if (loading) {
-    return <div style={{ margin: 32 }}>Loading workout plan...</div>;
+    return <div className="workout-loading">Loading workout plan...</div>;
   }
   if (error) {
-    return <div style={{ color: "red", margin: 32 }}>{error}</div>;
+    return <div className="workout-error">{error}</div>;
   }
   if (!workout) {
-    return <div style={{ margin: 32 }}>No workout plan available.</div>;
+    return <div className="workout-empty">No workout plan available.</div>;
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", background: "#fff", borderRadius: 12, boxShadow: "0 2px 12px #0002", padding: 24 }}>
-      <h2 style={{ textAlign: "center", marginBottom: 24 }}>Your AI Workout Plan</h2>
-      <div style={{ marginBottom: 24 }}>
-        <h3>Warmup</h3>
-        <div>
+    <div className="workout-main-container">
+      <h2 className="workout-title">Your AI Workout Plan</h2>
+      <div className="workout-section">
+        <h3 className="workout-section-title">Warmup</h3>
+        <div className="workout-section-content">
           <strong>Description:</strong> {workout.warmup?.description}
         </div>
-        <div>
+        <div className="workout-section-content">
           <strong>Duration:</strong> {workout.warmup?.duration} min
         </div>
       </div>
-      <div style={{ marginBottom: 24 }}>
-        <h3>Cardio</h3>
-        <div>
+      <div className="workout-section">
+        <h3 className="workout-section-title">Cardio</h3>
+        <div className="workout-section-content">
           <strong>Description:</strong> {workout.cardio?.description}
         </div>
-        <div>
+        <div className="workout-section-content">
           <strong>Duration:</strong> {workout.cardio?.duration} min
         </div>
       </div>
-      <div style={{ marginBottom: 24 }}>
-        <h3>Workout Sessions (per week: {workout.sessions_per_week})</h3>
+      <div className="workout-section">
+        <h3 className="workout-section-title">
+          Workout Sessions (per week: {workout.sessions_per_week})
+        </h3>
         {Array.isArray(workout.workout_sessions) && workout.workout_sessions.map((session, idx) => (
-          <div key={idx} style={{ marginBottom: 18, border: "1px solid #eee", borderRadius: 8, padding: 12 }}>
+          <div className="workout-table-container" key={idx}>
             <h4 style={{ margin: "0 0 8px 0" }}>Session {idx + 1}</h4>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table>
               <thead>
-                <tr style={{ background: "#f5f5f5" }}>
-                  <th style={{ padding: 6, border: "1px solid #ddd" }}>Exercise</th>
-                  <th style={{ padding: 6, border: "1px solid #ddd" }}>Sets</th>
-                  <th style={{ padding: 6, border: "1px solid #ddd" }}>Reps</th>
-                  <th style={{ padding: 6, border: "1px solid #ddd" }}>Rest (sec)</th>
+                <tr>
+                  <th>Exercise</th>
+                  <th>Sets</th>
+                  <th>Reps</th>
+                  <th>Rest (sec)</th>
                 </tr>
               </thead>
               <tbody>
                 {session.exercises.map((ex, i) => (
                   <tr key={i}>
-                    <td style={{ padding: 6, border: "1px solid #ddd" }}>{ex.name}</td>
-                    <td style={{ padding: 6, border: "1px solid #ddd" }}>{ex.sets}</td>
-                    <td style={{ padding: 6, border: "1px solid #ddd" }}>{ex.reps}</td>
-                    <td style={{ padding: 6, border: "1px solid #ddd" }}>{ex.rest}</td>
+                    <td>{ex.name}</td>
+                    <td>{ex.sets}</td>
+                    <td>{ex.reps}</td>
+                    <td>{ex.rest}</td>
                   </tr>
                 ))}
               </tbody>
@@ -111,12 +114,12 @@ const WorkoutMain = () => {
           </div>
         ))}
       </div>
-      <div>
-        <h3>Cooldown</h3>
-        <div>
+      <div className="workout-section">
+        <h3 className="workout-section-title">Cooldown</h3>
+        <div className="workout-section-content">
           <strong>Description:</strong> {workout.cooldown?.description}
         </div>
-        <div>
+        <div className="workout-section-content">
           <strong>Duration:</strong> {workout.cooldown?.duration} min
         </div>
       </div>

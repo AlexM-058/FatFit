@@ -269,90 +269,34 @@ const FitFatPage = () => {
           }}>Logout</button>
         </div>
       </div>
-      {/* User Modal */}
-      {showUserModal && (
-        <div className="modal-overlay" style={{
-          position: "fixed",
-          zIndex: 9998,
-          left: 0,
-          top: 0,
-          width: "100vw",
-          height: "100vh",
-          background: "rgba(0,0,0,0.3)",
-          backdropFilter: "blur(2px)"
-        }}>
-          <div className="modal" style={{
-            position: "relative",
-            zIndex: 9999,
-            background: "#fff",
-            borderRadius: 12,
-            padding: 32,
-            margin: "auto",
-            minWidth: 320,
-            minHeight: 180,
-            boxShadow: "0 4px 24px #0002"
-          }}>
-            <h3>Edit Username or Delete Account</h3>
-            <label>
-              New Username:
-              <input
-                type="text"
-                value={newUsername}
-                onChange={handleUsernameChange}
-                disabled={modalLoading}
-                style={{ marginLeft: 8 }}
-              />
-            </label>
-            <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-              <button onClick={handleUpdateUsername} disabled={modalLoading || !newUsername}>
-                Save
-              </button>
-              <button onClick={handleDeleteAccount} disabled={modalLoading} style={{ color: "red" }}>
-                Delete Account
-              </button>
-              <button onClick={handleCloseUserModal} disabled={modalLoading}>
-                Cancel
-              </button>
-            </div>
-            {modalError && <div style={{ color: "red", marginTop: 8 }}>{modalError}</div>}
-          </div>
-        </div>
-      )}
       <div
         className={`navigation${navOpen ? " open" : ""}`}
         onClick={() => navOpen && setNavOpen(false)}
       >
-        {/* Show nav-mobile-user only on mobile */}
-        <div className="nav-mobile-user">
-          <button className="user" onClick={handleOpenUserModal}>
-            Hello, {(userData && userData.user && userData.user.username) || username}!
-          </button>
-          <button className="logout" onClick={() => {
-            localStorage.removeItem("username");
-            localStorage.removeItem("token");
-            navigate('/');
-          }}>Logout</button>
-        </div>
-      
+        {/* Home button primul */}
+        <button
+          className={`nav-btn${location.pathname === `/fatfit/${username}` || location.pathname === `/fatfit/${username}/` ? " active" : ""}`}
+          onClick={() => {
+            returnCalorieCounter();
+            setNavOpen(false);
+          }}
+        >
+          Home
+        </button>
+        {/* restul butoanelor */}
         {[
           { label: "Workout", route: "/workout" },
           { label: "Food", route: "/meals" },
           { label: "Recipes", route: "/recipes" },
-          { label: "Your Recipes", route: "/for-you" },
-          { label: "Home", route: "" }
+          { label: "Your Recipes", route: "/for-you" }
         ].map(({ label, route }) => {
-          const isActive =
-            (route === ""
-              ? location.pathname === `/fatfit/${username}` || location.pathname === `/fatfit/${username}/`
-              : location.pathname === `/fatfit/${username}${route}`);
+          const isActive = location.pathname === `/fatfit/${username}${route}`;
           return (
             <button
-              key={route || "home"}
+              key={route}
               className={`nav-btn${isActive ? " active" : ""}`}
               onClick={() => {
-                if (route === "/for-you") goToRoute(route);
-                else if (route) goToRoute(route);
-                else returnCalorieCounter();
+                goToRoute(route);
                 setNavOpen(false);
               }}
             >
@@ -360,6 +304,32 @@ const FitFatPage = () => {
             </button>
           );
         })}
+        {/* Username și Logout imediat sub "Your Recipes" */}
+        <div className="nav-user-block nav-user-block-white" style={{ marginTop: 24, marginBottom: 8 }}>
+          <button
+            className="user nav-user-btn"
+            onClick={() => {
+              handleOpenUserModal();
+              navigate(`/fatfit/${username}`);
+            }}
+          >
+            Hello, {(userData && userData.user && userData.user.username) || username}!
+          </button>
+          <button
+            className="logout nav-user-btn"
+            style={{
+              marginTop: 8,
+              display: "block"
+            }}
+            onClick={() => {
+              localStorage.removeItem("username");
+              localStorage.removeItem("token");
+              navigate('/');
+            }}
+          >
+            Logout
+          </button>
+        </div>
         <div style={{ flex: 1 }} />
         <button
           className={`nav-btn${location.pathname === "/about-us" ? " active" : ""}`}
@@ -390,6 +360,46 @@ const FitFatPage = () => {
           <Outlet context={{ username }} />
         )}
       </div>
+      {/* User Modal */}
+      {showUserModal && (
+        <div className="modal-overlay" style={{
+          position: "fixed",
+          zIndex: 9998,
+          left: 0,
+          top: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "rgba(0,0,0,0.3)",
+          backdropFilter: "blur(2px)"
+        }}>
+          <div className="modal user-modal-popup">
+            <h3 className="user-modal-title">👤 Account Settings</h3>
+            <label className="user-modal-label">
+              New Username:
+              <input
+                type="text"
+                value={newUsername}
+                onChange={handleUsernameChange}
+                disabled={modalLoading}
+                style={{ marginLeft: 8 }}
+                className="user-modal-input"
+              />
+            </label>
+            <div className="user-modal-btn-row">
+              <button className="user-modal-btn" onClick={handleUpdateUsername} disabled={modalLoading || !newUsername}>
+                Save
+              </button>
+              <button className="user-modal-btn user-modal-btn-delete" onClick={handleDeleteAccount} disabled={modalLoading}>
+                Delete Account
+              </button>
+              <button className="user-modal-btn" onClick={handleCloseUserModal} disabled={modalLoading}>
+                Cancel
+              </button>
+            </div>
+            {modalError && <div className="user-modal-error">{modalError}</div>}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

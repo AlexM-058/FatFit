@@ -1,8 +1,8 @@
 .recipes-main-container {
   width: 95%;
-  
+  overflow-y: scroll;
   margin: 0 auto;
-  padding: 24px 16px 32px 16px;
+  
   background: #f8f6fb;
   border-radius: 14px;
   box-shadow: 0 2px 12px #c299dd22;
@@ -258,7 +258,7 @@
     border-radius: 0;
     box-shadow: none;
     min-height: fit-content;
-    overflow-y: auto;
+    overflow-y: scroll;
   }
   .recipes-list-scroll {
     flex-direction: column;

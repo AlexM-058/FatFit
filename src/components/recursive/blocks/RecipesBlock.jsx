@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./RecipesBlock.css";
 
-const RecipesBlock = ({ recipes, selectedType}) => {
+const RecipesBlock = ({ recipes, selectedType, onRecipeOpen }) => {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   if (!Array.isArray(recipes) || recipes.length === 0) {
@@ -22,40 +22,36 @@ const RecipesBlock = ({ recipes, selectedType}) => {
   }
 
   if (selectedRecipe) {
+    if (onRecipeOpen) onRecipeOpen(true);
     return (
-      <div style={{ maxWidth: 500, margin: "0 auto" }}>
-        <button onClick={() => setSelectedRecipe(null)} style={{ marginBottom: 16 }}>
-          Back to list
-        </button>
-        <div className="recipe-block" style={{
-          border: "1px solid #ccc",
-          borderRadius: 10,
-          padding: 16,
-          background: "#fff",
-          boxShadow: "0 2px 8px #0001",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}>
+      <div style={{ maxWidth: 520, margin: "0 auto" }}>
+        <div className="recipe-block open">
+          <button
+            className="back-to-list-btn"
+            onClick={() => {
+              setSelectedRecipe(null);
+              if (onRecipeOpen) onRecipeOpen(false);
+            }}
+          >
+            ← Back to list
+          </button>
           <img
             src={selectedRecipe.recipe_image}
             alt={selectedRecipe.recipe_name}
-            style={{
-              width: 220,
-              height: 160,
-              objectFit: "cover",
-              borderRadius: 8,
-              marginBottom: 10,
-              background: "#eee"
-            }}
+            className="recipe-block-image"
           />
-          <strong style={{ fontSize: 22, marginBottom: 8, textAlign: "center" }}>
+          <strong className="recipe-block-title">
             {selectedRecipe.recipe_name}
           </strong>
-          <div style={{ fontSize: 15, color: "#666", textAlign: "center", marginBottom: 10 }}>
+          <div className="recipe-block-desc">
             {selectedRecipe.recipe_description}
           </div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="recipe-block-calories">
+            Calories: {selectedRecipe.recipe_nutrition?.calories}
+            {selectedRecipe.recipe_nutrition?.calories_per_100g}
+               /100g
+          </div>
+          <div className="recipe-block-ingredients">
             <strong>Ingredients:</strong>
             <ul>
               {Array.isArray(selectedRecipe.recipe_ingredients?.ingredient)
@@ -63,16 +59,15 @@ const RecipesBlock = ({ recipes, selectedType}) => {
                 : null}
             </ul>
           </div>
-          <div style={{ marginBottom: 10 }}>
+          <div className="recipe-block-nutrition">
             <strong>Nutrition:</strong>
             <ul>
-              <li>Calories: {selectedRecipe.recipe_nutrition?.calories}</li>
               <li>Carbs: {selectedRecipe.recipe_nutrition?.carbohydrate}g</li>
               <li>Fat: {selectedRecipe.recipe_nutrition?.fat}g</li>
               <li>Protein: {selectedRecipe.recipe_nutrition?.protein}g</li>
             </ul>
           </div>
-          <div>
+          <div className="recipe-block-types">
             <strong>Types:</strong>
             <ul>
               {Array.isArray(selectedRecipe.recipe_types?.recipe_type)
@@ -83,47 +78,27 @@ const RecipesBlock = ({ recipes, selectedType}) => {
         </div>
       </div>
     );
+  } else {
+    if (onRecipeOpen) onRecipeOpen(false);
   }
 
   return (
-    <div>
-      <div className="recipes-block" style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+    <div className="recipes-block-container">
+      <div className="recipes-list-scroll">
         {filteredRecipes.map((recipe) => (
           <div
             className="recipe-block"
             key={recipe.recipe_id || recipe.id || recipe._id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: 10,
-              padding: 16,
-              width: 260,
-              background: "#fff",
-              boxShadow: "0 2px 8px #0001",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              cursor: "pointer"
-            }}
             onClick={() => setSelectedRecipe(recipe)}
           >
             <img
               src={recipe.recipe_image}
               alt={recipe.recipe_name}
-              style={{
-                width: 180,
-                height: 140,
-                objectFit: "cover",
-                borderRadius: 8,
-                marginBottom: 10,
-                background: "#eee"
-              }}
+              className="recipe-block-image"
             />
-            <strong style={{ fontSize: 18, marginBottom: 6, textAlign: "center" }}>
+            <strong className="recipe-block-title">
               {recipe.recipe_name}
             </strong>
-            <div style={{ fontSize: 13, color: "#666", textAlign: "center" }}>
-              {recipe.recipe_description}
-            </div>
           </div>
         ))}
       </div>

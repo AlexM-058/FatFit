@@ -22,6 +22,7 @@ const RecipesMain = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedType, setSelectedType] = useState("");
+  const [isRecipeOpen, setIsRecipeOpen] = useState(false); // nou
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -50,30 +51,35 @@ const RecipesMain = () => {
   const allTypes = getAllTypes(recipes);
 
   return (
-    <div className="recipes-main-container">
+    <div className={`recipes-simple-container${isRecipeOpen ? " recipe-details-open" : ""}`}>
       <h2 className="recipes-main-title">Recipes</h2>
-      <div className="recipes-type-filters">
-        <button
-          className={selectedType === "" ? "selected" : ""}
-          onClick={() => setSelectedType("")}
-        >
-          All
-        </button>
-        {allTypes.map((type) => (
+      {/* Ascunde filtrele dacă este deschis un food block */}
+      {!isRecipeOpen && (
+        <div className="recipes-type-filters">
           <button
-            key={type}
-            className={selectedType === type ? "selected" : ""}
-            onClick={() => setSelectedType(type)}
+            className={selectedType === "" ? "selected" : ""}
+            onClick={() => setSelectedType("")}
           >
-            {type}
+            All
           </button>
-        ))}
+          {allTypes.map((type) => (
+            <button
+              key={type}
+              className={selectedType === type ? "selected" : ""}
+              onClick={() => setSelectedType(type)}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="recipes-count">
+        <RecipesBlock
+          recipes={recipes}
+          selectedType={selectedType === "" ? null : selectedType}
+          onRecipeOpen={setIsRecipeOpen}
+        />
       </div>
-      
-      <RecipesBlock
-        recipes={recipes}
-        selectedType={selectedType === "" ? null : selectedType}
-      />
     </div>
   );
 };
