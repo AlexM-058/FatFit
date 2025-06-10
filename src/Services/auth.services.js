@@ -17,17 +17,17 @@ export default class AuthService {
 	// Login user
 	async login(userId, password) {
 		try {
-			console.log("Login payload:", { userId, password });
+			console.log("Login payload:", { username: userId, password });
 			const response = await httpRequest(this.url + "login", {
 				method: "POST",
-				body: JSON.stringify({ userId, password }),
+				body: JSON.stringify({ username: userId, password }),
 			});
 
 			const json = await response.json();
 			console.log("Backend login response:", json);
 
 			if (!response.ok) {
-				throw new Error(json.error || "An error occurred. Please try again later.");
+				throw new Error(json.error || json.message || "An error occurred. Please try again later.");
 			}
 
 			setToken(json.token);
