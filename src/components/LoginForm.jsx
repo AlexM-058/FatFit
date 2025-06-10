@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
+import AuthService from "../Services/auth.services";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,30 +14,14 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
     e.preventDefault();
     setError('');
 
-    console.log("🔐 Attempting login for:", username);
+    const authService = new AuthService();
+    const success = await authService.login(username, password);
 
-    try {
-      const response = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly/JWT
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await response.json();
-      console.log("📨 Server response:", data);
-
-      if (response.ok && data.success) {
-        console.log("✅ Login successful for user:", username);
-        localStorage.setItem("username", username); // pentru FitFatPage
-        onSubmit(username);
-      } else {
-        console.warn("⚠️ Login failed:", data.message);
-        setError(data.message || "Login failed. Please check your credentials.");
-      }
-    } catch (error) {
-      console.error("❌ Error during login request:", error);
-      setError("An error occurred while logging in. Please try again.");
+    if (success) {
+      // Userul și tokenul sunt deja setate în AuthService
+      if (onSubmit) onSubmit(username);
+    } else {
+      setError("Login failed. Please check your credentials.");
     }
   };
 
