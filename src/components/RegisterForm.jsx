@@ -60,6 +60,7 @@ const RegisterForm = ({ onBackClick }) => {
 
           if (checkData.exists) {
             alert('Username sau email deja există!');
+            handleLoginSubmit(); // Revino la pagina principală
             return;
           }
         } catch (err) {
