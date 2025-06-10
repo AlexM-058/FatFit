@@ -76,8 +76,8 @@ function Breakfast({ username, onFoodChange }) {
       {expanded && (
         <div className="meal-box-expanded">
           {loading && <div>Loading breakfast foods...</div>}
-          {error && <div style={{ color: "red" }}>{error}</div>}
-          <ul style={{ listStyle: "none", padding: 0, minHeight: 32 }}>
+          {error && <div className="meal-error">{error}</div>}
+          <ul className="meal-food-list">
             {/* Show foods if any */}
             {foods && foods.length > 0 && foods.map((food, idx) => (
               <li key={idx} className="meal-food-row">
@@ -86,7 +86,7 @@ function Breakfast({ username, onFoodChange }) {
             ))}
             {/* Show message only if not loading, not error, and foods is empty */}
             {!loading && !error && foods && foods.length === 0 && (
-              <li className="meal-food-row" style={{ color: "#888", fontStyle: "italic" }}>
+              <li className="meal-food-row meal-food-empty">
                 No breakfast foods for today.
               </li>
             )}
@@ -95,9 +95,6 @@ function Breakfast({ username, onFoodChange }) {
             <button
               className="meal-manage-btn"
               onClick={() => setShowManage(true)}
-              onMouseDown={e => e.currentTarget.style.transform = "scale(0.95)"}
-              onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
-              onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
             >
               🍳 Manage Breakfast
             </button>
@@ -107,48 +104,21 @@ function Breakfast({ username, onFoodChange }) {
       {/* Manage Popup */}
       {showManage && (
         <div
-          style={{
-            position: "fixed",
-            zIndex: 9999,
-            left: 0,
-            top: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.3)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
+          className="meal-manage-overlay"
           onClick={() => setShowManage(false)}
         >
           <div
-            style={{
-              background: "#fff",
-              borderRadius: 12,
-              padding: 32,
-              minWidth: 320,
-              minHeight: 180,
-              boxShadow: "0 4px 24px #0002",
-              position: "relative"
-            }}
+            className="meal-manage-popup"
             onClick={e => e.stopPropagation()}
           >
             <h3>Manage Breakfast Foods</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <ul className="meal-food-list">
               {foods.length === 0 && <li>No breakfast foods to manage.</li>}
               {foods.map((food, idx) => (
-                <li key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
+                <li key={idx} className="meal-manage-row">
                   <span>{food.name} {food.calories ? `(${food.calories} kcal)` : ""}</span>
                   <button
-                    style={{
-                      marginLeft: 12,
-                      color: "white",
-                      background: "#e74c3c",
-                      border: "none",
-                      borderRadius: 4,
-                      padding: "2px 8px",
-                      cursor: "pointer"
-                    }}
+                    className="meal-delete-btn"
                     onClick={() => handleDelete(food.name)}
                   >
                     Delete
@@ -157,15 +127,7 @@ function Breakfast({ username, onFoodChange }) {
               ))}
             </ul>
             <button
-              style={{
-                marginTop: 16,
-                background: "#888",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                padding: "6px 18px",
-                cursor: "pointer"
-              }}
+              className="meal-close-btn"
               onClick={() => setShowManage(false)}
             >
               Close
