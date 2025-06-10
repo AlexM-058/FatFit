@@ -3,7 +3,7 @@ import "./breakfest.css";
 import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Breakfest({ username, onFoodChange }) {
+function Breakfast({ username, onFoodChange }) {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -177,4 +177,4 @@ function Breakfest({ username, onFoodChange }) {
   );
 }
 
-export default Breakfest;
+export default Breakfast;

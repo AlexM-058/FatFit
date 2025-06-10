@@ -109,6 +109,24 @@ function CalorieCounter({ username }) {
     };
   }, [username, refreshBarKey]);
 
+  // Callbacks for each meal to refresh only that meal and the calorie bar
+  const handleBreakfastChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshBreakfast(k => k + 1);
+  }, []);
+  const handleLunchChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshLunch(k => k + 1);
+  }, []);
+  const handleDinnerChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshDinner(k => k + 1);
+  }, []);
+  const handleSnacksChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshSnacks(k => k + 1);
+  }, []);
+
   // Adaugă aceeași animație de loading pe mijlocul paginii când se încarcă datele inițiale.
   if (loadingInitialData) return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "64px 0" }}>
@@ -138,24 +156,6 @@ function CalorieCounter({ username }) {
   if (errorInitialData) {
     return <div className="error">{errorInitialData}</div>;
   }
-
-  // Callbacks for each meal to refresh only that meal and the calorie bar
-  const handleBreakfastChange = useCallback(() => {
-    setRefreshBarKey(k => k + 1);
-    setRefreshBreakfast(k => k + 1);
-  }, []);
-  const handleLunchChange = useCallback(() => {
-    setRefreshBarKey(k => k + 1);
-    setRefreshLunch(k => k + 1);
-  }, []);
-  const handleDinnerChange = useCallback(() => {
-    setRefreshBarKey(k => k + 1);
-    setRefreshDinner(k => k + 1);
-  }, []);
-  const handleSnacksChange = useCallback(() => {
-    setRefreshBarKey(k => k + 1);
-    setRefreshSnacks(k => k + 1);
-  }, []);
 
   return (
     <div className="calorie-counter-container" style={{ overflowY: "auto", maxHeight: "80vh" }}>
