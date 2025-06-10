@@ -1,10 +1,14 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import Search from "./Search";
 import "./MealsMain.css"; 
+
 const MealsMain = () => {
   const { username } = useParams(); 
-  console.log("Username from URL:", username);
+  if (!username) {
+    // Redirect to home or login if username is missing (prevents 404 on refresh)
+    return <Navigate to="/" replace />;
+  }
   return (
     <div className="meals-main-container">
       <h2 className="meals-title">Meals</h2>

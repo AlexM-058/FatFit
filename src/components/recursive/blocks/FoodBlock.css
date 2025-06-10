@@ -204,3 +204,29 @@
   text-align: center;
   letter-spacing: 0.2px;
 }
+
+.popup-mealtype-row {
+  margin: 14px 0 10px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-mealtype-select {
+  border: 1.5px solid #ffd166;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 1em;
+  background: #f8f6fb;
+  color: #7c3aed;
+  font-weight: 600;
+  outline: none;
+  transition: border 0.2s, background 0.2s, color 0.2s;
+}
+
+.popup-mealtype-select:focus {
+  border: 1.5px solid #c299dd;
+  background: #fff;
+  color: #4b2776;
+}

@@ -10,6 +10,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
 
   const [grams, setGrams] = useState(100);
   const [mealType, setMealType] = useState("lunch");
+  const [portions, setPortions] = useState(1); // pentru your recipes
   const [error, setError] = useState("");
 
   const caloriesPer100g = Number(food.food_kcal) || 0;
@@ -17,10 +18,12 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
   const carbsPer100g = Number(food.food_carbs) || 0;
   const fatPer100g = Number(food.food_fat) || 0;
 
-  const calories = grams ? Math.round((caloriesPer100g * grams) / 100) : 0;
-  const protein = grams ? ((proteinPer100g * grams) / 100).toFixed(2) : "0.00";
-  const carbs = grams ? ((carbsPer100g * grams) / 100).toFixed(2) : "0.00";
-  const fat = grams ? ((fatPer100g * grams) / 100).toFixed(2) : "0.00";
+  // Folosește portions dacă există (pentru your recipes)
+  const totalGrams = grams * (portions || 1);
+  const calories = totalGrams ? Math.round((caloriesPer100g * totalGrams) / 100) : 0;
+  const protein = totalGrams ? ((proteinPer100g * totalGrams) / 100).toFixed(2) : "0.00";
+  const carbs = totalGrams ? ((carbsPer100g * totalGrams) / 100).toFixed(2) : "0.00";
+  const fat = totalGrams ? ((fatPer100g * totalGrams) / 100).toFixed(2) : "0.00";
 
   const handleAddCalories = async () => {
     if (!username) {
@@ -62,6 +65,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
         setError(result.message || "Failed to send to database.");
       }
     } catch (error) {
+      console.error("Error sending food data:", error);
       setError("Could not send to database due to network/server error.");
     }
   };
@@ -74,10 +78,35 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
     }
   };
 
+  const handlePortionsChange = (e) => {
+    const val = e.target.value;
+    // Permite gol sau număr pozitiv
+    if (val === "" || (/^\d+$/.test(val) && Number(val) > 0)) {
+      setPortions(val === "" ? "" : Number(val));
+      setError("");
+    }
+  };
+
   return (
     <div className="food-block-popup">
       <h3>{food.food_name}</h3>
       <p><b>Calories:</b> {food.food_kcal} kcal / 100g</p>
+      {/* Portion selector pentru your recipes */}
+      <div style={{ margin: "10px 0" }}>
+        <label>
+          <b>Portions:</b>{" "}
+          <input
+            type="number"
+            min={1}
+            max={20}
+            step={1}
+            value={portions}
+            onChange={handlePortionsChange}
+            placeholder="portions"
+            style={{ width: 70, marginLeft: 8 }}
+          />
+        </label>
+      </div>
       <div style={{ margin: "10px 0" }}>
         <label>
           <b>Select grams:</b>{" "}
@@ -93,7 +122,7 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
           /> g
         </label>
         <div style={{ marginTop: 6 }}>
-          <b>Total for {grams || 0}g:</b>
+          <b>Total for {totalGrams || 0}g ({portions || 1} portion{(portions || 1) > 1 ? "s" : ""}):</b>
           <ul style={{ margin: 0, paddingLeft: 18 }}>
             <li>Calories: {calories} kcal</li>
             <li>Protein: {protein} g</li>
@@ -102,16 +131,31 @@ const PopUpFood = ({ food, onAddCalories, onClose, username: propUsername }) => 
           </ul>
         </div>
       </div>
-      <div style={{ margin: "10px 0" }}>
-        <label>
-          <b>Meal Type:</b>{" "}
-          <select value={mealType} onChange={e => setMealType(e.target.value)}>
-            <option value="breakfast">Breakfast</option>
-            <option value="lunch">Lunch</option>
-            <option value="dinner">Dinner</option>
-            <option value="snacks">Snacks</option>
-          </select>
+      <div className="popup-mealtype-row" style={{ margin: "14px 0 10px 0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <label style={{ fontWeight: 600, color: "#7c3aed", marginRight: 10 }}>
+          Meal Type:
         </label>
+        <select
+          value={mealType}
+          onChange={e => setMealType(e.target.value)}
+          className="popup-mealtype-select"
+          style={{
+            border: "1.5px solid #ffd166",
+            borderRadius: 8,
+            padding: "6px 18px",
+            fontSize: "1em",
+            background: "#f8f6fb",
+            color: "#7c3aed",
+            fontWeight: 600,
+            outline: "none",
+            transition: "border 0.2s, background 0.2s, color 0.2s"
+          }}
+        >
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snacks">Snacks</option>
+        </select>
       </div>
       <p><b>Protein:</b> {food.food_protein} g / 100g</p>
       <p><b>Carbs:</b> {food.food_carbs} g / 100g</p>

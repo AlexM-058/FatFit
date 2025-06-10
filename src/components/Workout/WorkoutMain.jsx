@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { httpRequest } from "../../utils/http";
 import "./WorkoutMain.css";
 const API_URL = import.meta.env.VITE_API_URL;
@@ -9,7 +9,7 @@ const WorkoutMain = () => {
   const [workout, setWorkout] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     if (!username) return;
     setLoading(true);
@@ -51,7 +51,7 @@ const WorkoutMain = () => {
       })
       .catch((err) => setError(err.message || "Unknown error"))
       .finally(() => setLoading(false));
-  }, [username]);
+    }, [username]);
 
   if (loading) {
     return <div className="workout-loading">Loading workout plan...</div>;
@@ -62,26 +62,29 @@ const WorkoutMain = () => {
   if (!workout) {
     return <div className="workout-empty">No workout plan available.</div>;
   }
-
+  
+  if (!username) {
+    return <Navigate to="/" replace />;
+  }
   return (
     <div className="workout-main-container">
       <h2 className="workout-title">Your AI Workout Plan</h2>
       <div className="workout-section">
         <h3 className="workout-section-title">Warmup</h3>
         <div className="workout-section-content">
-          <strong>Description:</strong> {workout.warmup?.description}
+          <strong>Description:</strong> {workout.warmup && workout.warmup.description ? workout.warmup.description : "N/A"}
         </div>
         <div className="workout-section-content">
-          <strong>Duration:</strong> {workout.warmup?.duration} min
+          <strong>Duration:</strong> {workout.warmup && workout.warmup.duration ? workout.warmup.duration : "N/A"} min
         </div>
       </div>
       <div className="workout-section">
         <h3 className="workout-section-title">Cardio</h3>
         <div className="workout-section-content">
-          <strong>Description:</strong> {workout.cardio?.description}
+          <strong>Description:</strong> {workout.cardio && workout.cardio.description ? workout.cardio.description : "N/A"}
         </div>
         <div className="workout-section-content">
-          <strong>Duration:</strong> {workout.cardio?.duration} min
+          <strong>Duration:</strong> {workout.cardio && workout.cardio.duration ? workout.cardio.duration : "N/A"} min
         </div>
       </div>
       <div className="workout-section">
@@ -117,10 +120,10 @@ const WorkoutMain = () => {
       <div className="workout-section">
         <h3 className="workout-section-title">Cooldown</h3>
         <div className="workout-section-content">
-          <strong>Description:</strong> {workout.cooldown?.description}
+          <strong>Description:</strong> {workout.cooldown && workout.cooldown.description ? workout.cooldown.description : "N/A"}
         </div>
         <div className="workout-section-content">
-          <strong>Duration:</strong> {workout.cooldown?.duration} min
+          <strong>Duration:</strong> {workout.cooldown && workout.cooldown.duration ? workout.cooldown.duration : "N/A"} min
         </div>
       </div>
     </div>

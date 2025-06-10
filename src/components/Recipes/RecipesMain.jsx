@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import RecipesBlock from "../recursive/blocks/RecipesBlock.jsx";
 import "./RecipesMain.css";
 import { httpRequest } from "../../utils/http";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Refacem selecțiile la toate tipurile găsite în date, nu doar cele principale
@@ -18,12 +19,13 @@ const getAllTypes = (recipes) => {
 };
 
 const RecipesMain = () => {
+  
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedType, setSelectedType] = useState("");
   const [isRecipeOpen, setIsRecipeOpen] = useState(false); // nou
-
+  
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
@@ -44,11 +46,12 @@ const RecipesMain = () => {
     };
     fetchRecipes();
   }, []);
-
+  
   if (loading) return <div>Loading recipes...</div>;
   if (error) return <div>Error: {error}</div>;
-
+  
   const allTypes = getAllTypes(recipes);
+  
 
   return (
     <div className={`recipes-simple-container${isRecipeOpen ? " recipe-details-open" : ""}`}>
@@ -59,15 +62,15 @@ const RecipesMain = () => {
           <button
             className={selectedType === "" ? "selected" : ""}
             onClick={() => setSelectedType("")}
-          >
+            >
             All
           </button>
           {allTypes.map((type) => (
             <button
-              key={type}
-              className={selectedType === type ? "selected" : ""}
+            key={type}
+            className={selectedType === type ? "selected" : ""}
               onClick={() => setSelectedType(type)}
-            >
+              >
               {type}
             </button>
           ))}
@@ -78,7 +81,7 @@ const RecipesMain = () => {
           recipes={recipes}
           selectedType={selectedType === "" ? null : selectedType}
           onRecipeOpen={setIsRecipeOpen}
-        />
+          />
       </div>
     </div>
   );

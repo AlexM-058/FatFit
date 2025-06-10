@@ -165,12 +165,18 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
                       min={1}
                       max={10}
                       value={servings}
-                      onChange={e => setServings(Number(e.target.value))}
+                      onChange={e => {
+                        const val = e.target.value;
+                        // Permite gol sau număr pozitiv
+                        if (val === "" || (/^\d+$/.test(val) && Number(val) > 0)) {
+                          setServings(val === "" ? "" : Number(val));
+                        }
+                      }}
                       style={{ width: 50, marginLeft: 8 }}
                     />
                   </label>
                   <div style={{ marginTop: 4 }}>
-                    <b>Total Calories:</b> {parseFloat(recipe.calories) * servings} kcal
+                    <b>Total Calories:</b> {parseFloat(recipe.calories) * (servings || 1)} kcal
                   </div>
                 </div>
               </li>
