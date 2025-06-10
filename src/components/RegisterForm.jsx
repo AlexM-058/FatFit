@@ -76,6 +76,21 @@ const RegisterForm = ({ onBackClick }) => {
       // Do not allow to proceed without answering the question
       const currentQ = quizData[currentQuestionIndex];
       const answer = formData[currentQ?.question];
+
+      // Check if the current question is conditional and the condition is NOT met
+      if (
+        currentQ?.conditionalOn &&
+        formData[currentQ.conditionalOn.question] !== currentQ.conditionalOn.value
+      ) {
+        // Skip validation for this question, go to next
+        if (currentQuestionIndex < quizData.length - 1) {
+          setCurrentQuestionIndex(prev => prev + 1);
+        } else {
+          setStep(3);
+        }
+        return;
+      }
+
       const isAnswered =
         currentQ?.type === 'checkbox'
           ? Array.isArray(answer) && answer.length > 0
@@ -129,6 +144,10 @@ const RegisterForm = ({ onBackClick }) => {
       }
       // Optionally, check that all quiz questions are answered
       const allQuizAnswered = quizData.every(q => {
+        // If conditionalOn exists and condition is NOT met, skip validation for this question
+        if (q.conditionalOn && formData[q.conditionalOn.question] !== q.conditionalOn.value) {
+          return true;
+        }
         const answer = formData[q.question];
         return q.type === "checkbox"
           ? Array.isArray(answer) && answer.length > 0
