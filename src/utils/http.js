@@ -1,4 +1,4 @@
-import { useAuthStore } from '@stores/authStore';
+import { useAuthStore } from '../stores/authStore';
 import { getToken } from './jwt';
 import { toast } from 'react-toastify';
 import defaultToastOptions from './toast';
