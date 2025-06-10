@@ -1,7 +1,7 @@
 // CalorieCounter.jsx
 import React, { useEffect, useState, useCallback } from 'react';
 import CalorieBar from './CalorieBar';
-import Breakfest from './breakfest';
+import Breakfast from './breakfast';
 import Lunch from './lunch';
 import Dinner from './dinner';
 import Snacks from './Snacks';
@@ -15,9 +15,15 @@ function CalorieCounter({ username }) {
   const [maxCalories, setMaxCalories] = useState(null);
   const [loadingInitialData, setLoadingInitialData] = useState(true);
   const [errorInitialData, setErrorInitialData] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch user data and calories
+  // Separate refresh keys for each meal and calorie bar
+  const [refreshBarKey, setRefreshBarKey] = useState(0);
+  const [refreshBreakfast, setRefreshBreakfast] = useState(0);
+  const [refreshLunch, setRefreshLunch] = useState(0);
+  const [refreshDinner, setRefreshDinner] = useState(0);
+  const [refreshSnacks, setRefreshSnacks] = useState(0);
+
+  // Fetch user data and calories (for calorie bar)
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -62,7 +68,6 @@ function CalorieCounter({ username }) {
 
         // --- Extract calories from all meals ---
         let totalCalories = 0;
-        // Fetch all foods for each meal and sum calories
         let allFoods = [];
         const mealTypes = ["breakfast", "lunch", "dinner", "snacks"];
         for (const mealType of mealTypes) {
@@ -71,7 +76,6 @@ function CalorieCounter({ username }) {
               method: "GET",
               credentials: "include"
             });
-            // Defensive: check for valid JSON and foods array
             let mealData = {};
             try {
               mealData = await res.json();
@@ -82,11 +86,10 @@ function CalorieCounter({ username }) {
               allFoods = allFoods.concat(mealData.foods.filter(f => typeof f.calories !== "undefined"));
             }
           } catch (e) {
-            console.error(`Error fetching ${mealType} data:`, e);
-            // Ignore errors for individual meals
+            // ignore
+            console.warn(`Failed to fetch ${mealType} foods:`, e);
           }
         }
-        // Defensive: sum only numbers
         totalCalories = allFoods.reduce((acc, food) => acc + (Number(food.calories) || 0), 0);
         setCurrentCalories(totalCalories);
 
@@ -104,16 +107,33 @@ function CalorieCounter({ username }) {
     return () => {
       controller.abort();
     };
-  }, [username, refreshKey]); // <-- refreshKey here
+  }, [username, refreshBarKey]);
 
-  // Callback to trigger refresh from children
-  const handleFoodChange = useCallback(() => {
-    setRefreshKey((k) => k + 1);
+  // Adaugă refreshKey ca prop pentru fiecare masă și folosește funcții dedicate pentru refresh
+  const handleBreakfastChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshBreakfast(k => k + 1);
+  }, []);
+  const handleLunchChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshLunch(k => k + 1);
+  }, []);
+  const handleDinnerChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshDinner(k => k + 1);
+  }, []);
+  const handleSnacksChange = useCallback(() => {
+    setRefreshBarKey(k => k + 1);
+    setRefreshSnacks(k => k + 1);
   }, []);
 
-  if (loadingInitialData) return <p>Loading user calorie data...</p>;
-  if (errorInitialData) return <div className="error-message">Error: {errorInitialData}</div>;
-  if (maxCalories === null) return <p>No daily calorie target available for this user.</p>;
+  if (loadingInitialData) {
+    return <div>Loading...</div>;
+  }
+
+  if (errorInitialData) {
+    return <div className="error">{errorInitialData}</div>;
+  }
 
   return (
     <div className="calorie-counter-container" style={{ overflowY: "auto", maxHeight: "80vh" }}>
@@ -135,10 +155,30 @@ function CalorieCounter({ username }) {
       <div className="meal-sections">
         <h1>Meals</h1>
         <div className="meal-section meal-section-responsive">
-          <Breakfest className="breakfest" username={username} onFoodChange={handleFoodChange} />
-          <Lunch className="lunch" username={username} onFoodChange={handleFoodChange} />
-          <Dinner className="dinner" username={username} onFoodChange={handleFoodChange} />
-          <Snacks className="snacks" username={username} onFoodChange={handleFoodChange} />
+          <Breakfast
+            className="breakfast"
+            username={username}
+            onFoodChange={handleBreakfastChange}
+            refreshKey={refreshBreakfast}
+          />
+          <Lunch
+            className="lunch"
+            username={username}
+            onFoodChange={handleLunchChange}
+            refreshKey={refreshLunch}
+          />
+          <Dinner
+            className="dinner"
+            username={username}
+            onFoodChange={handleDinnerChange}
+            refreshKey={refreshDinner}
+          />
+          <Snacks
+            className="snacks"
+            username={username}
+            onFoodChange={handleSnacksChange}
+            refreshKey={refreshSnacks}
+          />
         </div>
       </div>
     </div>
