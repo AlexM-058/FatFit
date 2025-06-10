@@ -2,6 +2,7 @@ import React from "react";
 import "./Search.css";
 import { useState } from "react";
 import FoodBlock from "../recursive/blocks/FoodBlock.jsx";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Search = ({ username }) => {
@@ -10,7 +11,7 @@ const Search = ({ username }) => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(
+      const response = await httpRequest(
         `${API_URL}/fatsecret-search?q=${encodeURIComponent(query)}`
       );
       if (!response.ok) {

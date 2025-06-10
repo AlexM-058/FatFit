@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './RegisterForm.css';
 import LoginForm from "./LoginForm";
+import { httpRequest } from "../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const RegisterForm = ({ onBackClick }) => {
@@ -15,8 +16,8 @@ const RegisterForm = ({ onBackClick }) => {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/quiz`, {
-      credentials: "include" // Ensure cookies are sent for httpOnly JWT
+    httpRequest(`${API_URL}/quiz`, {
+      credentials: "include"
     })
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch quiz');
@@ -48,10 +49,10 @@ const RegisterForm = ({ onBackClick }) => {
         }
 
         try {
-          const checkRes = await fetch(`${API_URL}/check-user`, {
+          const checkRes = await httpRequest(`${API_URL}/check-user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
+            credentials: "include",
             body: JSON.stringify({ username, email }),
           });
 
@@ -138,10 +139,10 @@ const RegisterForm = ({ onBackClick }) => {
         return;
       }
 
-      const registerRes = await fetch(`${API_URL}/register`, {
+      const registerRes = await httpRequest(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
+        credentials: "include",
         body: JSON.stringify({ fullname, username, email, password }),
       });
 
@@ -152,10 +153,10 @@ const RegisterForm = ({ onBackClick }) => {
         return;
       }
 
-      const quizRes = await fetch(`${API_URL}/answers`, {
+      const quizRes = await httpRequest(`${API_URL}/answers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // OBLIGATORIU pentru cookie-uri httpOnly
+        credentials: "include",
         body: JSON.stringify({ username, answers: quizAnswers }),
       });
 

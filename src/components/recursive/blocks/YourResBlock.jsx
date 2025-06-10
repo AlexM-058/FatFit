@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './YourResBlock.css';
+import { httpRequest } from "../../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function YourResBlock({ recipe, username, mealType, onAddCalories }) {
@@ -24,11 +25,9 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
       return;
     }
 
-    
     const foodData = {
       name: recipe.name,
       calories: parseFloat(recipe.calories) * servings,
-    
     };
 
     const payload = {
@@ -39,7 +38,7 @@ function YourResBlock({ recipe, username, mealType, onAddCalories }) {
     try {
       console.log("Sending to database:", payload);
 
-      const response = await fetch(`${API_URL}/api/recipes-calories/${username}`, {
+      const response = await httpRequest(`${API_URL}/api/recipes-calories/${username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

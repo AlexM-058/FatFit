@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./breakfest.css"; // reuse the same CSS for consistent design
+import "./breakfest.css";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Dinner({ username, onFoodChange }) {
@@ -14,7 +15,7 @@ function Dinner({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
 
-    fetch(`${API_URL}/caloriecounter/${username}/dinner`, {
+    httpRequest(`${API_URL}/caloriecounter/${username}/dinner`, {
       credentials: "include"
     })
       .then(async (res) => {
@@ -31,7 +32,7 @@ function Dinner({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/food/${username}/dinner`, {
+      const res = await httpRequest(`${API_URL}/food/${username}/dinner`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foodName }),

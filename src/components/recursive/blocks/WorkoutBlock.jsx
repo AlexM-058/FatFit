@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { httpRequest } from "../../../utils/http";
 
 const WorkoutBlock = ({ username }) => {
   const [workout, setWorkout] = useState(null);
@@ -9,7 +10,7 @@ const WorkoutBlock = ({ username }) => {
     if (!username) return;
     setLoading(true);
     setError(null);
-    fetch(`http://localhost:3001/api/fitness-tribe/workout/${username}`, {
+    httpRequest(`${import.meta.env.VITE_API_URL}/api/fitness-tribe/workout/${username}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })

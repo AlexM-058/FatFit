@@ -76,7 +76,7 @@ const FitFatPage = () => {
             localStorage.removeItem("username");
             setError("Session expired or unauthorized. Please log in again.");
             setLoading(false);
-            navigate("/", { replace: true });
+            
             return;
           }
 
@@ -86,7 +86,7 @@ const FitFatPage = () => {
           if (data && data.data === 'Protected content') {
             setError("Session expired or unauthorized. Please log in again.");
             setLoading(false);
-            navigate("/", { replace: true });
+           
             return;
           }
           setUserData(data);
@@ -173,10 +173,11 @@ const FitFatPage = () => {
     setModalLoading(true);
     setModalError("");
     try {
-      const response = await fetch(`${API_URL}/user/${userData.user.username}`, {
+      const response = await httpRequest(`${API_URL}/user/${userData.user.username}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newUsername }),
+        credentials: "include"
       });
       if (!response.ok) {
         const data = await response.json();
@@ -205,8 +206,9 @@ const FitFatPage = () => {
     setModalLoading(true);
     setModalError("");
     try {
-      const response = await fetch(`${API_URL}/user/${userData.user.username}`, {
+      const response = await httpRequest(`${API_URL}/user/${userData.user.username}`, {
         method: "DELETE",
+        credentials: "include"
       });
       if (!response.ok) {
         const data = await response.json();

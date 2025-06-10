@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./breakfest.css";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Breakfest({ username, onFoodChange }) {
@@ -15,7 +16,7 @@ function Breakfest({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
 
-    fetch(`${API_URL}/caloriecounter/${username}/breakfast`, {
+    httpRequest(`${API_URL}/caloriecounter/${username}/breakfast`, {
       credentials: "include"
     })
       .then(async (res) => {
@@ -33,7 +34,7 @@ function Breakfest({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/food/${username}/breakfast`, {
+      const res = await httpRequest(`${API_URL}/food/${username}/breakfast`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foodName }),

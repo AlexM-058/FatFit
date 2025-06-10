@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './ForgotPassword.css'; // Import CSS specific to ForgotPassword
+import { httpRequest } from "../utils/http";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -18,7 +19,7 @@ const ForgotPassword = ({ onBackClick }) => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/reset-password`, {
+      const res = await httpRequest(`${API_URL}/reset-password`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -30,7 +31,6 @@ const ForgotPassword = ({ onBackClick }) => {
         data = await res.json();
       } catch (jsonErr) {
         console.error('Failed to parse JSON response:', jsonErr);
-        // If response is not JSON (e.g. HTML error page), show generic error
         setError('Unexpected server response. Please try again later.');
         setLoading(false);
         return;

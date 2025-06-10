@@ -6,6 +6,9 @@ import Lunch from './lunch';
 import Dinner from './dinner';
 import Snacks from './Snacks';
 import './CalorieCounter.css';
+import { httpRequest } from '../../utils/http';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function CalorieCounter({ username }) {
   const [currentCalories, setCurrentCalories] = useState(0);
@@ -30,9 +33,10 @@ function CalorieCounter({ username }) {
           return;
         }
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/fatfit/${username}`, {
-          signal,
-          credentials: "include"
+        const response = await httpRequest(`${API_URL}/fatfit/${username}`, {
+          method: "GET",
+          credentials: "include",
+          signal
         });
 
         if (signal.aborted) return;
@@ -59,12 +63,12 @@ function CalorieCounter({ username }) {
         // --- Extract calories from all meals ---
         let totalCalories = 0;
         // Fetch all foods for each meal and sum calories
-        const API_URL = import.meta.env.VITE_API_URL;
-        const mealTypes = ["breakfast", "lunch", "dinner", "snacks"];
         let allFoods = [];
+        const mealTypes = ["breakfast", "lunch", "dinner", "snacks"];
         for (const mealType of mealTypes) {
           try {
-            const res = await fetch(`${API_URL}/caloriecounter/${username}/${mealType}`, {
+            const res = await httpRequest(`${API_URL}/caloriecounter/${username}/${mealType}`, {
+              method: "GET",
               credentials: "include"
             });
             // Defensive: check for valid JSON and foods array

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CalorieBar from "../FatFit-Main/CalorieBar";
 import RecipeItem from "./RecipeItem";
 import "./RecipesPage.css";
+import { httpRequest } from "../../utils/http";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -88,7 +89,7 @@ const RecipesPage = ({ maxCalories = 2000 }) => {
     setError("");
     setRecipes([]);
     try {
-      const res = await fetch(
+      const res = await httpRequest(
         `${API_URL}/recipes/search?q=${encodeURIComponent(query)}`
       );
       if (!res.ok) throw new Error("Failed to fetch recipes");
@@ -109,7 +110,7 @@ const RecipesPage = ({ maxCalories = 2000 }) => {
     setFoods([]);
     setShowFoods(true);
     try {
-      const res = await fetch(
+      const res = await httpRequest(
         `${API_URL}/fatsecret-search?q=${encodeURIComponent(query)}`
       );
       if (!res.ok) throw new Error("Failed to fetch foods");

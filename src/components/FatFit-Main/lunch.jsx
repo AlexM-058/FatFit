@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./breakfest.css"; // reuse the same CSS for consistent design
+import { httpRequest } from "../../utils/http";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Lunch({ username, onFoodChange }) {
@@ -14,7 +16,7 @@ function Lunch({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
 
-    fetch(`${API_URL}/caloriecounter/${username}/lunch`, {
+    httpRequest(`${API_URL}/caloriecounter/${username}/lunch`, {
       credentials: "include"
     })
       .then(async (res) => {
@@ -32,7 +34,7 @@ function Lunch({ username, onFoodChange }) {
     setError(null);
     try {
       // Use the correct endpoint and method for your backend
-      const res = await fetch(`${API_URL}/food/${username}/lunch`, {
+      const res = await httpRequest(`${API_URL}/food/${username}/lunch`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foodName }),

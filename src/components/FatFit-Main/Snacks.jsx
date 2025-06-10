@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./breakfest.css"; // reuse the same CSS for consistent design
+import "./breakfest.css";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Snacks({ username, onFoodChange }) {
@@ -14,11 +15,11 @@ function Snacks({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
 
-    fetch(`${API_URL}/caloriecounter/${username}/snacks`, {
+    httpRequest(`${API_URL}/caloriecounter/${username}/snacks`, {
       credentials: "include"
     })
       .then(async (res) => {
-        if (!res.ok) throw new Error("Failed to fetch snacks.");
+        if (!res.ok) throw new Error("Failed to fetch snacks foods.");
         const data = await res.json();
         setFoods(data.foods || []);
       })
@@ -31,7 +32,7 @@ function Snacks({ username, onFoodChange }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/food/${username}/snacks`, {
+      const res = await httpRequest(`${API_URL}/food/${username}/snacks`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ foodName }),

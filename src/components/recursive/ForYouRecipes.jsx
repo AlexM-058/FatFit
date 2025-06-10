@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import YourResBlock from "./blocks/YourResBlock.jsx";
 import "./ForYouRecipes.css";
+import { httpRequest } from "../../utils/http";
 
 const ForYouRecipes = ({ username }) => {
   const [breakfastRecipes, setBreakfastRecipes] = useState([]);
@@ -45,7 +46,7 @@ const ForYouRecipes = ({ username }) => {
         // ignore parse error, fallback to fetch
       }
     }
-    fetch(`${import.meta.env.VITE_API_URL}/api/fitness-tribe/recipes/${username}`, {
+    httpRequest(`${import.meta.env.VITE_API_URL}/api/fitness-tribe/recipes/${username}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })

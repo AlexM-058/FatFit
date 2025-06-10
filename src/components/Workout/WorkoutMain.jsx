@@ -33,7 +33,7 @@ const WorkoutMain = () => {
 
     httpRequest(`${API_URL}/api/fitness-tribe/workout/${username}`, {
       method: "POST",
-      // credentials: "include" // dacă ai nevoie de cookie-uri, adaugă aici
+      credentials: "include"
     })
       .then(async (res) => {
         if (!res.ok) {
