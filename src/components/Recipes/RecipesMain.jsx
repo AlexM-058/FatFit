@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RecipesBlock from "../recursive/blocks/RecipesBlock.jsx";
 import "./RecipesMain.css";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Refacem selecțiile la toate tipurile găsite în date, nu doar cele principale
@@ -27,7 +28,7 @@ const RecipesMain = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`${API_URL}/api/recipes/search`);
+        const response = await httpRequest(`${API_URL}/api/recipes/search`);
         if (!response.ok) {
           throw new Error("Failed to fetch recipes");
         }

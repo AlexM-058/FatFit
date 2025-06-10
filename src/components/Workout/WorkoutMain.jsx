@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { httpRequest } from "../../utils/http";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const WorkoutMain = () => {
@@ -30,9 +31,9 @@ const WorkoutMain = () => {
       }
     }
 
-    fetch(`${API_URL}/api/fitness-tribe/workout/${username}`, {
+    httpRequest(`${API_URL}/api/fitness-tribe/workout/${username}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }
+      // credentials: "include" // dacă ai nevoie de cookie-uri, adaugă aici
     })
       .then(async (res) => {
         if (!res.ok) {

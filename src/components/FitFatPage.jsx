@@ -3,6 +3,7 @@ import './FitFatPage.css';
 import { Outlet, useNavigate, useParams, useLocation, Link } from 'react-router-dom';
 import CalorieCounter from './FatFit-Main/CalorieCounter';
 import ForYouRecipes from './recursive/ForYouRecipes'; 
+import { httpRequest } from "../utils/http";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -46,9 +47,9 @@ const FitFatPage = () => {
             // Log cookies before making the request
             console.log("Current cookies before fetch:", document.cookie);
 
-            response = await fetch(`${API_URL}/fatfit/${username}`, {
+            response = await httpRequest(`${API_URL}/fatfit/${username}`, {
               signal,
-              credentials: "include" // Use cookies for auth
+              credentials: "include"
             });
 
             // Log response status for debugging

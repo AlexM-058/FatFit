@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
 import AuthService from "../Services/auth.services";
+import { useAuthStore } from "../stores/authStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -19,9 +20,7 @@ const LoginForm = ({ onSignUpClick, onResetPasswordClick, onSubmit }) => {
 
     // Debug: vezi ce token ai primit și ce user e setat
     console.log("Token in cookies:", document.cookie);
-    // Poți verifica și userul din store dacă vrei:
-    // import { useAuthStore } from "../stores/authStore";
-    // console.log("User in store:", useAuthStore.getState().user);
+    console.log("User in store:", useAuthStore.getState().user);
 
     if (success) {
       if (onSubmit) onSubmit(username);
