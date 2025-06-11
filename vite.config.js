@@ -12,3 +12,7 @@ export default defineConfig({
     },
   },
 });
+
+// vite.config.js is present and correct.
+// Make sure @vitejs/plugin-react is installed in your project dependencies.
+// Run: npm install @vitejs/plugin-react --save-dev
