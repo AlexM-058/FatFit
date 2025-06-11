@@ -105,6 +105,31 @@
   color: #888;
 }
 
+.workout-loading-bar {
+  width: 220px;
+  height: 12px;
+  background: #f3eaff;
+  border-radius: 8px;
+  margin: 24px auto 12px auto;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 12px #c299dd22;
+}
+
+.workout-loading-bar-inner {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ffd166 40%, #c299dd 100%);
+  border-radius: 8px;
+  animation: loading-bar-move 1.4s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+@keyframes loading-bar-move {
+  0% { width: 0; }
+  60% { width: 100%; }
+  100% { width: 0; }
+}
+
 @media (max-width: 700px) {
   .workout-main-container {
     padding: 16px 2vw 24px 2vw;

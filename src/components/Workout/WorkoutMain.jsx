@@ -54,7 +54,14 @@ const WorkoutMain = () => {
     }, [username]);
 
   if (loading) {
-    return <div className="workout-loading">Loading workout plan...</div>;
+    return (
+      <div className="workout-loading">
+        <div className="workout-loading-bar">
+          <div className="workout-loading-bar-inner"></div>
+        </div>
+        <div style={{ marginTop: 12 }}>Waiting for API to start...</div>
+      </div>
+    );
   }
   if (error) {
     return <div className="workout-error">{error}</div>;
