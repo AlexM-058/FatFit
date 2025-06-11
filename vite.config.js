@@ -1,16 +1,14 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
+import history from "connect-history-api-fallback";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:3001", // adresa backendului tău
-        changeOrigin: true,
-        secure: false,
-      },
+    middlewareMode: true,
+    configureServer(server) {
+      server.middlewares.use(history());
     },
   },
 });
