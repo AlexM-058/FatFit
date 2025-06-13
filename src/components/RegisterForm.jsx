@@ -199,7 +199,13 @@ const RegisterForm = ({ onBackClick }) => {
   };
 
   return (
-    <div className="register-form">
+    <div
+      className="register-form"
+      style={{
+        overflowY: 'auto',
+        
+      }}
+    >
       {step === 1 && (
         <div className="step-container">
           <div className="Inputs-signup">
@@ -372,7 +378,7 @@ const RegisterForm = ({ onBackClick }) => {
               ))}
             </div>
           </div>
-          <div className="form-navigation">
+          <div className="form-navigation" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
             <button
               className='form-button submit-btn'
               onClick={() => { handleSubmit(); handleLoginSubmit(); }}
@@ -383,14 +389,17 @@ const RegisterForm = ({ onBackClick }) => {
           </div>
         </div>
       )}
-      <div style={{ textAlign: "center"}}>
-        <button
-          className="form-button login-btn"
-          onClick={handleLoginSubmit}
-        >
-          Already have an account? Login
-        </button>
-      </div>
+      {/* Afișează butonul "Already have an account? Login" doar dacă step !== 3 */}
+      {step !== 3 && (
+        <div style={{ textAlign: "center"}}>
+          <button
+            className="form-button login-btn"
+            onClick={handleLoginSubmit}
+          >
+            Already have an account? Login
+          </button>
+        </div>
+      )}
     </div>
   );
 };

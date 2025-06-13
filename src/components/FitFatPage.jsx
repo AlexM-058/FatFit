@@ -55,8 +55,7 @@ const FitFatPage = () => {
 
             // Log response status for debugging
             console.log("Fetch /fatfit/:username response status:", response.status);
-            // Log response headers
-            console.log("Response headers:", [...response.headers]);
+           
           } catch (fetchErr) {
             if (fetchErr.name === "AbortError") {
               console.log("Fetch aborted (not an error):", fetchErr.message);
@@ -237,7 +236,12 @@ const FitFatPage = () => {
   }, []);
 
   return (
-    <div className="fatfit-container">
+    <div
+      className="fatfit-container"
+      style={{
+        height: '50vh'
+      }}
+    >
       <div className="head" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001, width: "100vw" }}>
         {/* Burger bar button only on mobile */}
         <button
