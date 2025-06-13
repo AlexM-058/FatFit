@@ -202,8 +202,8 @@ const RegisterForm = ({ onBackClick }) => {
     <div
       className="register-form"
       style={{
+        height: '100vh',
         overflowY: 'auto',
-        maxHeight: '100vh',
         // Poți adăuga și padding dacă vrei să nu se lipească de margini
         // paddingBottom: '16px'
       }}
