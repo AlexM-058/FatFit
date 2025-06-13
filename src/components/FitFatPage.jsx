@@ -47,7 +47,7 @@ const FitFatPage = () => {
             // Log cookies before making the request
             console.log("Current cookies before fetch:", document.cookie);
 
-            response = await httpRequest(`${API_URL}/fatfit/${username}`, {
+            response = await fetch(`https://fatfitb-test.onrender.com/fatfit/${username}`, {
               method: "GET",
               signal,
               credentials: "include"

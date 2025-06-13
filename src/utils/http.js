@@ -6,15 +6,20 @@ export const httpRequest = async (url, options = {}, undefinedContentType = fals
     try {
         const headers = {
             ...options.headers,
-            'Authorization': `Bearer ${getToken()}`,
         };
-        if (!undefinedContentType) {
+        const token = getToken();
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        // Nu adăuga Content-Type la GET
+        if (!undefinedContentType && (!options.method || options.method.toUpperCase() !== 'GET')) {
             headers['Content-Type'] = (options && options.headers && options.headers['Content-Type']) || 'application/json';
         }
 
         const response = await fetch(url, {
             ...options,
-            headers
+            headers,
+            credentials: "include", // important pentru cookie JWT cross-origin
         });
 
         const repClone = response.clone();
