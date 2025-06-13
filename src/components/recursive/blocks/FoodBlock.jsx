@@ -9,7 +9,7 @@ function FoodBlock({ food, calories, username }) {
     setShowPopup(true);
   };
 
-  // Funcție pentru a închide pop-up-ul după adăugare calorii sau back
+  
   const handleClosePopup = () => {
     setShowPopup(false);
   };

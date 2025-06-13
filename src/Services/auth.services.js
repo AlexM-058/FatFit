@@ -15,7 +15,7 @@ export default class AuthService {
 	}
 
 	// Login user
-	async login(userId, password) {
+	 	async login(userId, password) {
 		try {
 			console.log("Login payload:", { username: userId, password });
 			const response = await httpRequest(this.url + "login", {
