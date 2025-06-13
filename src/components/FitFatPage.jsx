@@ -240,7 +240,7 @@ const FitFatPage = () => {
       className="fatfit-container"
       style={{
         height: '100vh',
-        overflowY: 'auto',
+        overflowY: 'scroll',
         // paddingBottom: '16px' // opțional, pentru spațiu suplimentar jos
       }}
     >
