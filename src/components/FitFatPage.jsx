@@ -55,7 +55,8 @@ const FitFatPage = () => {
 
             // Log response status for debugging
             console.log("Fetch /fatfit/:username response status:", response.status);
-
+            // Log response headers
+            console.log("Response headers:", [...response.headers]);
           } catch (fetchErr) {
             if (fetchErr.name === "AbortError") {
               console.log("Fetch aborted (not an error):", fetchErr.message);
