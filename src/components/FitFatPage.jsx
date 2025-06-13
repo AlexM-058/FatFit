@@ -236,12 +236,7 @@ const FitFatPage = () => {
   }, []);
 
   return (
-    <div
-      className="fatfit-container"
-      style={{
-        height: '50vh'
-      }}
-    >
+    <div className="fatfit-container">
       <div className="head" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1001, width: "100vw" }}>
         {/* Burger bar button only on mobile */}
         <button

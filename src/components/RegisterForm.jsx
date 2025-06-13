@@ -201,10 +201,7 @@ const RegisterForm = ({ onBackClick }) => {
   return (
     <div
       className="register-form"
-      style={{
-        overflowY: 'auto',
-        
-      }}
+  
     >
       {step === 1 && (
         <div className="step-container">
